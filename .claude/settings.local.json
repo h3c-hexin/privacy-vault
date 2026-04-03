@@ -41,7 +41,8 @@
       "Bash(xargs stat:*)",
       "Bash(dart pub:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
