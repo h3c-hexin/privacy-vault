@@ -47,11 +47,16 @@ class KeyManager {
     final pinSalt = _keyDerivation.generateSalt();
     final masterSalt = _keyDerivation.generateSalt();
 
-    // 2. 生成 PIN 验证哈希
-    final pinHash = _keyDerivation.hashPin(pin, pinSalt);
-
-    // 3. 派生 master key
-    final masterKey = _keyDerivation.deriveKey(pin, masterSalt);
+    // 2. 生成 PIN 验证哈希 + 派生 master key（Isolate，不阻塞 UI）
+    final derived = await Isolate.run(() {
+      final kd = KeyDerivation();
+      return (
+        pinHash: kd.hashPin(pin, pinSalt),
+        masterKey: kd.deriveKey(pin, masterSalt),
+      );
+    });
+    final pinHash = derived.pinHash;
+    final masterKey = derived.masterKey;
 
     // 4. 生成 KEK
     final kek = _cryptoEngine.generateKey();

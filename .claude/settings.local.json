@@ -30,7 +30,9 @@
       "Bash(python3:*)",
       "Bash(xargs:*)",
       "Read",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "Bash(keytool:*)",
+      "Bash(/home/hexin/Android/Sdk/build-tools/35.0.0/apksigner verify:*)"
     ]
   }
 }
