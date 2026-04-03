@@ -2,22 +2,32 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:privacy_vault/core/crypto/key_manager.dart';
+import 'package:privacy_vault/core/security/brute_force_guard.dart';
 import 'package:privacy_vault/features/calculator/presentation/blocs/calculator_bloc.dart';
 import 'package:privacy_vault/features/calculator/presentation/blocs/calculator_event.dart';
 import 'package:privacy_vault/features/calculator/presentation/blocs/calculator_state.dart';
 
 class MockKeyManager extends Mock implements KeyManager {}
 
+class MockBruteForceGuard extends Mock implements BruteForceGuard {}
+
 void main() {
   group('CalculatorBloc', () {
     late CalculatorBloc bloc;
     late MockKeyManager mockKeyManager;
+    late MockBruteForceGuard mockGuard;
 
     setUp(() {
       mockKeyManager = MockKeyManager();
+      mockGuard = MockBruteForceGuard();
       when(() => mockKeyManager.unlockWithPin(any()))
           .thenAnswer((_) async => false);
-      bloc = CalculatorBloc(keyManager: mockKeyManager);
+      when(() => mockGuard.isInCooldown()).thenAnswer((_) async => false);
+      when(() => mockGuard.reset()).thenAnswer((_) async {});
+      when(() => mockGuard.recordFailure()).thenAnswer(
+        (_) async => (errorCount: 1, cooldownUntil: null),
+      );
+      bloc = CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,);
     });
 
     tearDown(() => bloc.close());
@@ -30,7 +40,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '输入数字',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(const CalcDigitPressed('3'));
@@ -42,7 +52,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '加法运算',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(const CalcOperatorPressed('+'));
@@ -56,7 +66,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '减法运算',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('9'));
         bloc.add(const CalcOperatorPressed('-'));
@@ -70,7 +80,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '乘法运算',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('6'));
         bloc.add(const CalcOperatorPressed('×'));
@@ -84,7 +94,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '除法运算',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('8'));
         bloc.add(const CalcOperatorPressed('÷'));
@@ -98,7 +108,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '除以零显示错误',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(const CalcOperatorPressed('÷'));
@@ -112,7 +122,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '清除重置状态',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(const CalcDigitPressed('3'));
@@ -126,7 +136,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '退格删除最后一位',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('1'));
         bloc.add(const CalcDigitPressed('2'));
@@ -140,7 +150,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '退格到空显示0',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(CalcBackspacePressed());
@@ -152,7 +162,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '小数点输入',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('3'));
         bloc.add(CalcDotPressed());
@@ -165,7 +175,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '不允许重复小数点',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('3'));
         bloc.add(CalcDotPressed());
@@ -179,7 +189,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '正负切换',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(CalcToggleSign());
@@ -191,7 +201,7 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '百分号',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
         bloc.add(const CalcDigitPressed('0'));
@@ -205,10 +215,9 @@ void main() {
     blocTest<CalculatorBloc, CalculatorState>(
       'PIN 检测：正确 PIN + = 触发',
       build: () {
-        // 模拟 '1234' 为正确 PIN
         when(() => mockKeyManager.unlockWithPin('1234'))
             .thenAnswer((_) async => true);
-        return CalculatorBloc(keyManager: mockKeyManager);
+        return CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,);
       },
       act: (bloc) {
         bloc.add(const CalcDigitPressed('1'));
@@ -228,7 +237,7 @@ void main() {
       build: () {
         when(() => mockKeyManager.unlockWithPin('5678'))
             .thenAnswer((_) async => false);
-        return CalculatorBloc(keyManager: mockKeyManager);
+        return CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,);
       },
       act: (bloc) {
         bloc.add(const CalcDigitPressed('5'));
@@ -245,13 +254,12 @@ void main() {
 
     blocTest<CalculatorBloc, CalculatorState>(
       '链式运算',
-      build: () => CalculatorBloc(keyManager: mockKeyManager),
+      build: () => CalculatorBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) {
         bloc.add(const CalcDigitPressed('2'));
         bloc.add(const CalcOperatorPressed('+'));
         bloc.add(const CalcDigitPressed('3'));
         bloc.add(const CalcOperatorPressed('×'));
-        // 2+3=5, 5×...
         bloc.add(const CalcDigitPressed('4'));
         bloc.add(CalcEqualsPressed());
       },

@@ -2,23 +2,36 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:privacy_vault/core/crypto/key_manager.dart';
+import 'package:privacy_vault/core/security/brute_force_guard.dart';
 import 'package:privacy_vault/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:privacy_vault/features/auth/presentation/blocs/auth_event.dart';
 import 'package:privacy_vault/features/auth/presentation/blocs/auth_state.dart';
 
 class MockKeyManager extends Mock implements KeyManager {}
 
+class MockBruteForceGuard extends Mock implements BruteForceGuard {}
+
 void main() {
   late MockKeyManager mockKeyManager;
+  late MockBruteForceGuard mockGuard;
 
   setUp(() {
     mockKeyManager = MockKeyManager();
+    mockGuard = MockBruteForceGuard();
+    // 默认：无冷却、无错误
+    when(() => mockGuard.loadErrorCount()).thenAnswer((_) async => 0);
+    when(() => mockGuard.loadCooldownUntil()).thenAnswer((_) async => null);
+    when(() => mockGuard.isInCooldown()).thenAnswer((_) async => false);
+    when(() => mockGuard.reset()).thenAnswer((_) async {});
+    when(() => mockGuard.recordFailure()).thenAnswer(
+      (_) async => (errorCount: 1, cooldownUntil: null),
+    );
   });
 
   group('AuthBloc', () {
     blocTest<AuthBloc, AuthState>(
       '初始状态应为 initial',
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       verify: (bloc) {
         expect(bloc.state.status, AuthStatus.initial);
         expect(bloc.state.errorCount, 0);
@@ -30,7 +43,7 @@ void main() {
       setUp: () {
         when(() => mockKeyManager.isSetupComplete()).thenAnswer((_) async => false);
       },
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(AuthCheckSetup()),
       expect: () => [
         const AuthState(status: AuthStatus.needsSetup),
@@ -42,7 +55,7 @@ void main() {
       setUp: () {
         when(() => mockKeyManager.isSetupComplete()).thenAnswer((_) async => true);
       },
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(AuthCheckSetup()),
       expect: () => [
         const AuthState(status: AuthStatus.locked),
@@ -54,7 +67,7 @@ void main() {
       setUp: () {
         when(() => mockKeyManager.setup(any())).thenAnswer((_) async {});
       },
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(const AuthSetupPin('1234')),
       expect: () => [
         const AuthState(status: AuthStatus.unlocked),
@@ -66,7 +79,7 @@ void main() {
       setUp: () {
         when(() => mockKeyManager.unlockWithPin(any())).thenAnswer((_) async => true);
       },
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(const AuthUnlockWithPin('1234')),
       expect: () => [
         const AuthState(status: AuthStatus.unlocked),
@@ -77,8 +90,11 @@ void main() {
       'UnlockWithPin: 错误 PIN → 错误计数+1',
       setUp: () {
         when(() => mockKeyManager.unlockWithPin(any())).thenAnswer((_) async => false);
+        when(() => mockGuard.recordFailure()).thenAnswer(
+          (_) async => (errorCount: 1, cooldownUntil: null),
+        );
       },
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(const AuthUnlockWithPin('9999')),
       expect: () => [
         isA<AuthState>()
@@ -91,9 +107,15 @@ void main() {
       'UnlockWithPin: 连续 5 次错误 → 30 秒冷却',
       setUp: () {
         when(() => mockKeyManager.unlockWithPin(any())).thenAnswer((_) async => false);
+        when(() => mockGuard.recordFailure()).thenAnswer(
+          (_) async => (
+            errorCount: 5,
+            cooldownUntil: DateTime.now().add(const Duration(seconds: 30)),
+          ),
+        );
       },
       seed: () => const AuthState(errorCount: 4),
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(const AuthUnlockWithPin('9999')),
       expect: () => [
         isA<AuthState>()
@@ -108,7 +130,7 @@ void main() {
         when(() => mockKeyManager.lock()).thenReturn(null);
       },
       seed: () => const AuthState(status: AuthStatus.unlocked),
-      build: () => AuthBloc(keyManager: mockKeyManager),
+      build: () => AuthBloc(keyManager: mockKeyManager, guard: mockGuard,),
       act: (bloc) => bloc.add(AuthLock()),
       expect: () => [
         const AuthState(status: AuthStatus.locked),

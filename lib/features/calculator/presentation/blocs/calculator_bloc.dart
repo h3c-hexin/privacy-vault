@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:privacy_vault/core/crypto/key_manager.dart';
+import 'package:privacy_vault/core/security/brute_force_guard.dart';
 import 'calculator_event.dart';
 import 'calculator_state.dart';
 
@@ -12,23 +12,13 @@ import 'calculator_state.dart';
 /// 验证失败时同样更新持久化的错误计数。
 class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   final KeyManager _keyManager;
-  final FlutterSecureStorage _secureStorage;
-
-  // 与 AuthBloc 共用相同的 SecureStorage 键名，保证状态同步
-  static const String _errorCountKey = 'auth_error_count';
-  static const String _cooldownUntilKey = 'auth_cooldown_until';
-
-  // 冷却阈值（与 AuthBloc 保持一致）
-  static const int _cooldown1Threshold = 5;
-  static const int _cooldown2Threshold = 10;
-  static const Duration _cooldown1Duration = Duration(seconds: 30);
-  static const Duration _cooldown2Duration = Duration(minutes: 5);
+  final BruteForceGuard _guard;
 
   CalculatorBloc({
     required KeyManager keyManager,
-    FlutterSecureStorage? secureStorage,
+    required BruteForceGuard guard,
   })  : _keyManager = keyManager,
-        _secureStorage = secureStorage ?? const FlutterSecureStorage(),
+        _guard = guard,
         super(const CalculatorState()) {
     on<CalcDigitPressed>(_onDigitPressed);
     on<CalcOperatorPressed>(_onOperatorPressed);
@@ -38,41 +28,6 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     on<CalcBackspacePressed>(_onBackspacePressed);
     on<CalcToggleSign>(_onToggleSign);
     on<CalcPercentPressed>(_onPercentPressed);
-  }
-
-  /// 检查当前是否处于冷却期
-  ///
-  /// 从 SecureStorage 读取 cooldownUntil，与 AuthBloc 共享同一份数据。
-  Future<bool> _isInCooldown() async {
-    final cooldownUntilStr = await _secureStorage.read(key: _cooldownUntilKey);
-    if (cooldownUntilStr == null) return false;
-    final cooldownUntil = DateTime.tryParse(cooldownUntilStr);
-    if (cooldownUntil == null) return false;
-    return DateTime.now().isBefore(cooldownUntil);
-  }
-
-  /// PIN 验证失败时更新持久化的错误计数和冷却时间
-  Future<void> _onPinVerifyFailed() async {
-    final errorCountStr = await _secureStorage.read(key: _errorCountKey);
-    final newErrorCount = (int.tryParse(errorCountStr ?? '') ?? 0) + 1;
-
-    DateTime? cooldownUntil;
-    if (newErrorCount >= _cooldown2Threshold) {
-      cooldownUntil = DateTime.now().add(_cooldown2Duration);
-    } else if (newErrorCount >= _cooldown1Threshold) {
-      cooldownUntil = DateTime.now().add(_cooldown1Duration);
-    }
-
-    await _secureStorage.write(
-      key: _errorCountKey,
-      value: newErrorCount.toString(),
-    );
-    if (cooldownUntil != null) {
-      await _secureStorage.write(
-        key: _cooldownUntilKey,
-        value: cooldownUntil.toIso8601String(),
-      );
-    }
   }
 
   void _onDigitPressed(
@@ -132,19 +87,16 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   ) async {
     // 检测 PIN：>= 4 位且当前无验证进行中
     if (state.inputSequence.length >= 4 && !state.verifying) {
-      final inCooldown = await _isInCooldown();
+      final inCooldown = await _guard.isInCooldown();
       if (!inCooldown) {
         emit(state.copyWith(verifying: true));
         final success = await _keyManager.unlockWithPin(state.inputSequence);
         if (success) {
-          await Future.wait([
-            _secureStorage.write(key: _errorCountKey, value: '0'),
-            _secureStorage.delete(key: _cooldownUntilKey),
-          ]);
+          await _guard.reset();
           emit(state.copyWith(pinDetected: true, verifying: false));
           return;
         } else {
-          await _onPinVerifyFailed();
+          await _guard.recordFailure();
           emit(state.copyWith(verifying: false));
         }
       }
