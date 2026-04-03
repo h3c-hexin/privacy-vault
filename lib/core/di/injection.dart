@@ -8,6 +8,7 @@ import 'package:privacy_vault/core/crypto/key_derivation.dart';
 import 'package:privacy_vault/core/crypto/key_manager.dart';
 import 'package:privacy_vault/core/crypto/keystore_service.dart';
 import 'package:privacy_vault/core/database/app_database.dart';
+import 'package:privacy_vault/core/security/brute_force_guard.dart';
 import 'package:privacy_vault/core/security/session_manager.dart';
 import 'package:privacy_vault/core/storage/encrypted_file_storage.dart';
 import 'package:privacy_vault/core/storage/temp_file_manager.dart';
@@ -80,6 +81,7 @@ Future<void> configureDependencies() async {
   );
 
   // Security
+  getIt.registerLazySingleton<BruteForceGuard>(() => BruteForceGuard());
   getIt.registerLazySingleton<SessionManager>(
     () => SessionManager(keyManager: getIt<KeyManager>()),
   );
@@ -94,6 +96,7 @@ Future<void> configureDependencies() async {
       keyManager: getIt<KeyManager>(),
       intrusionCapture: getIt<IntrusionCaptureService>(),
       database: getIt<AppDatabase>(),
+      guard: getIt<BruteForceGuard>(),
     ),
   );
 
@@ -130,7 +133,10 @@ Future<void> configureDependencies() async {
 
   /// CalculatorBloc：管理计算器界面及 PIN 隐藏入口，每次进入计算器页面时创建。
   getIt.registerFactory<CalculatorBloc>(
-    () => CalculatorBloc(keyManager: getIt<KeyManager>()),
+    () => CalculatorBloc(
+      keyManager: getIt<KeyManager>(),
+      guard: getIt<BruteForceGuard>(),
+    ),
   );
 
   /// IntrusionBloc：管理入侵拍照记录，每次进入入侵记录页面时创建。
