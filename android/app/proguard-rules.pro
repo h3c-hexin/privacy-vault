@@ -24,6 +24,9 @@
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 
+# Play Core（Flutter deferred components 引用，实际未使用）
+-dontwarn com.google.android.play.core.**
+
 # 保留注解
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable

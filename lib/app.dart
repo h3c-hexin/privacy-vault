@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:privacy_vault/core/di/injection.dart';
 import 'package:privacy_vault/core/crypto/key_manager.dart';
+import 'package:privacy_vault/core/security/brute_force_guard.dart';
 import 'package:privacy_vault/core/security/session_manager.dart';
 import 'package:privacy_vault/core/theme/app_theme.dart';
 import 'package:privacy_vault/features/auth/presentation/blocs/auth_bloc.dart';
@@ -74,6 +75,7 @@ class _PrivacyVaultAppState extends State<PrivacyVaultApp> {
       keyManager: getIt<KeyManager>(),
       intrusionCapture: getIt<IntrusionCaptureService>(),
       database: getIt<AppDatabase>(),
+      guard: getIt<BruteForceGuard>(),
     )..add(AuthCheckSetup());
     _authListenable = _AuthStateListenable(_authBloc);
     _router = _createRouter();
