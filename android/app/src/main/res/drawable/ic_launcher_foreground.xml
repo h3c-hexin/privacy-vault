@@ -1,71 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  计算器伪装图标前景：白色简约计算器图案
+  计算器伪装图标前景：白色数学符号 2x2 网格（÷ × − +）
+  蓝紫渐变背景配套使用
   设计规格：108dp 画布，安全区域 66dp（居中）
-  视觉元素：显示屏 + 4x4 按键网格的抽象图形
+  网格中心：左列 x=40，右列 x=68，上行 y=42，下行 y=66
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
 
-    <!-- 计算器外壳：圆角矩形 -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M30,22 h48 a6,6 0 0 1 6,6 v52 a6,6 0 0 1 -6,6 h-48 a6,6 0 0 1 -6,-6 v-52 a6,6 0 0 1 6,-6 z" />
+  <!-- ÷ 除号 center(40,42) -->
+  <path android:fillColor="#FFFFFF"
+    android:pathData="M40,32.8a2.2,2.2 0 1,1 0,4.4a2.2,2.2 0 1,1 0,-4.4z"/>
+  <path android:fillColor="#FFFFFF"
+    android:pathData="M33.5,40.7h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"/>
+  <path android:fillColor="#FFFFFF"
+    android:pathData="M40,46.8a2.2,2.2 0 1,1 0,4.4a2.2,2.2 0 1,1 0,-4.4z"/>
 
-    <!-- 显示屏区域：深色矩形 -->
-    <path
-        android:fillColor="#2D2D2D"
-        android:pathData="M32,28 h44 a3,3 0 0 1 3,3 v12 a3,3 0 0 1 -3,3 h-44 a3,3 0 0 1 -3,-3 v-12 a3,3 0 0 1 3,-3 z" />
+  <!-- × 乘号 center(68,42)，用旋转矩形确保完美对称 -->
+  <group android:pivotX="68" android:pivotY="42" android:rotation="45">
+    <path android:fillColor="#FFFFFF"
+      android:pathData="M61.5,40.7h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"/>
+  </group>
+  <group android:pivotX="68" android:pivotY="42" android:rotation="-45">
+    <path android:fillColor="#FFFFFF"
+      android:pathData="M61.5,40.7h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"/>
+  </group>
 
-    <!-- 显示屏文字暗示：浅色横线 -->
-    <path
-        android:fillColor="#AAAAAA"
-        android:pathData="M55,37 h20 a1,1 0 0 1 0,2 h-20 a1,1 0 0 1 0,-2 z" />
+  <!-- − 减号 center(40,66) -->
+  <path android:fillColor="#FFFFFF"
+    android:pathData="M33.5,64.7h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"/>
 
-    <!-- 按键网格：4列 x 4行 圆角小方块 -->
-    <!-- 第1行 -->
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M32,50 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M45,50 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M58,50 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#FF9500"
-        android:pathData="M71,50 h5 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-5 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-
-    <!-- 第2行 -->
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M32,62 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M45,62 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M58,62 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#FF9500"
-        android:pathData="M71,62 h5 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-5 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-
-    <!-- 第3行 -->
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M32,74 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M45,74 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#E0E0E0"
-        android:pathData="M58,74 h8 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-8 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
-    <path
-        android:fillColor="#FF9500"
-        android:pathData="M71,74 h5 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-5 a2,2 0 0 1 -2,-2 v-6 a2,2 0 0 1 2,-2 z" />
+  <!-- + 加号 center(68,66) -->
+  <path android:fillColor="#FFFFFF"
+    android:pathData="M61.5,64.7h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"/>
+  <path android:fillColor="#FFFFFF"
+    android:pathData="M69.3,59.5v13a1.3,1.3 0 0 1 -2.6,0v-13a1.3,1.3 0 0 1 2.6,0z"/>
 
 </vector>

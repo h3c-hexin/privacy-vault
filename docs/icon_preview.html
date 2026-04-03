@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>计算器图标方案对比</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: #F5F5F7;
+    color: #1D1D1F;
+    padding: 40px 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: #86868B;
+    margin-bottom: 48px;
+  }
+  .scheme {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .scheme-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .scheme-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .scheme-title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .scheme-desc {
+    font-size: 14px;
+    color: #86868B;
+    margin-top: 2px;
+  }
+  .preview-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .preview-item {
+    text-align: center;
+  }
+  .preview-item .size-label {
+    font-size: 12px;
+    color: #86868B;
+    margin-top: 8px;
+  }
+  .icon-wrap {
+    border-radius: 22%;
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  .icon-wrap svg {
+    display: block;
+  }
+  .color-spec {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .color-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #515154;
+  }
+  .color-chip .swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+  .code-block {
+    background: #1D1D1F;
+    color: #E5E5E7;
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+    margin-top: 16px;
+  }
+  .code-block .comment { color: #6E6E73; }
+  .code-block .tag { color: #64D2FF; }
+  .code-block .attr { color: #FF6482; }
+  .code-block .val { color: #30D158; }
+
+  /* 桌面模拟 */
+  .desktop-sim {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 20px;
+    padding: 40px 20px 24px;
+    max-width: 960px;
+    margin: 48px auto 0;
+    text-align: center;
+  }
+  .desktop-sim h3 {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+  .dock {
+    display: inline-flex;
+    gap: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 12px 20px;
+  }
+  .dock-item {
+    text-align: center;
+  }
+  .dock-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .dock-icon svg { display: block; width: 56px; height: 56px; }
+  .dock-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.85);
+    margin-top: 4px;
+  }
+
+  details { margin-top: 16px; }
+  details summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #515154;
+    padding: 8px 0;
+  }
+  details summary:hover { color: #1D1D1F; }
+</style>
+</head>
+<body>
+
+<h1>计算器图标方案对比</h1>
+<p class="subtitle">5 套现代风格方案 / Android Adaptive Icon 规格 / 108dp 画布 66dp 安全区</p>
+
+<!-- ==================== 方案 A ==================== -->
+<div class="scheme">
+  <div class="scheme-header">
+    <div class="scheme-label" style="background:linear-gradient(135deg,#667EEA,#764BA2);">A</div>
+    <div>
+      <div class="scheme-title">蓝紫渐变 + 白色四符号 2x2 网格</div>
+      <div class="scheme-desc">三星/华为风格 -- 高端科技感，符号精致匀称</div>
+    </div>
+  </div>
+  <div class="color-spec">
+    <div class="color-chip"><span class="swatch" style="background:linear-gradient(135deg,#667EEA,#764BA2);"></span>渐变 #667EEA -> #764BA2</div>
+    <div class="color-chip"><span class="swatch" style="background:#FFFFFF;"></span>符号 #FFFFFF</div>
+  </div>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:128px;height:128px;">
+        <svg width="128" height="128" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bgA" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#667EEA"/>
+              <stop offset="100%" stop-color="#764BA2"/>
+            </linearGradient>
+          </defs>
+          <rect width="108" height="108" fill="url(#bgA)"/>
+          <!-- 2x2 grid centered in 66dp safe zone -->
+          <!-- Row 1: divide (left), multiply (right) -->
+          <circle cx="40" cy="37" r="2.2" fill="#FFFFFF"/>
+          <rect x="33.5" y="41.4" width="13" height="2.6" rx="1.3" fill="#FFFFFF"/>
+          <circle cx="40" cy="48" r="2.2" fill="#FFFFFF"/>
+          <g transform="translate(68,42.5)">
+            <rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFFFFF" transform="rotate(45)"/>
+            <rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFFFFF" transform="rotate(-45)"/>
+          </g>
+          <!-- Row 2: subtract (left), plus (right) -->
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFFFFF"/>
+          <rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFFFFF"/>
+          <rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <div class="size-label">128px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:64px;height:64px;">
+        <svg width="64" height="64" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgA2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#667EEA"/><stop offset="100%" stop-color="#764BA2"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgA2)"/>
+          <circle cx="40" cy="37" r="2.2" fill="#FFF"/><rect x="33.5" y="41.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><circle cx="40" cy="48" r="2.2" fill="#FFF"/>
+          <g transform="translate(68,42.5)"><rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFF" transform="rotate(45)"/><rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFF" transform="rotate(-45)"/></g>
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="size-label">64px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:48px;height:48px;">
+        <svg width="48" height="48" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgA3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#667EEA"/><stop offset="100%" stop-color="#764BA2"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgA3)"/>
+          <circle cx="40" cy="37" r="2.2" fill="#FFF"/><rect x="33.5" y="41.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><circle cx="40" cy="48" r="2.2" fill="#FFF"/>
+          <g transform="translate(68,42.5)"><rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFF" transform="rotate(45)"/><rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFF" transform="rotate(-45)"/></g>
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="size-label">48px</div>
+    </div>
+  </div>
+  <details>
+    <summary>查看 Android XML 代码</summary>
+    <div class="code-block"><span class="comment">&lt;!-- res/drawable/ic_launcher_background.xml --&gt;</span>
+<span class="tag">&lt;shape</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;gradient</span>
+    <span class="attr">android:type</span>=<span class="val">"linear"</span>
+    <span class="attr">android:startColor</span>=<span class="val">"#667EEA"</span>
+    <span class="attr">android:endColor</span>=<span class="val">"#764BA2"</span>
+    <span class="attr">android:angle</span>=<span class="val">"135"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/shape&gt;</span>
+
+<span class="comment">&lt;!-- res/drawable/ic_launcher_foreground.xml --&gt;</span>
+<span class="tag">&lt;vector</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">android:width</span>=<span class="val">"108dp"</span> <span class="attr">android:height</span>=<span class="val">"108dp"</span>
+    <span class="attr">android:viewportWidth</span>=<span class="val">"108"</span> <span class="attr">android:viewportHeight</span>=<span class="val">"108"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- Divide: dot-line-dot --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M40,34.8a2.2,2.2 0 1,1 0,4.4a2.2,2.2 0 1,1 0,-4.4z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M33.5,41.4h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M40,45.8a2.2,2.2 0 1,1 0,4.4a2.2,2.2 0 1,1 0,-4.4z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Multiply --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M63.04,37.54l9.9,9.9a1.3,1.3 0 0 1 -1.84,1.84l-9.9,-9.9a1.3,1.3 0 0 1 1.84,-1.84z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M72.94,37.54l-9.9,9.9a1.3,1.3 0 0 1 -1.84,-1.84l9.9,-9.9a1.3,1.3 0 0 1 1.84,1.84z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Subtract --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M33.5,64.4h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Plus --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M61.5,64.4h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M66.7,59.2v13a1.3,1.3 0 0 1 -2.6,0v-13a1.3,1.3 0 0 1 2.6,0z"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/vector&gt;</span>
+
+<span class="comment">&lt;!-- res/mipmap-anydpi-v26/ic_launcher.xml --&gt;</span>
+<span class="tag">&lt;adaptive-icon</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;background</span> <span class="attr">android:drawable</span>=<span class="val">"@drawable/ic_launcher_background"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;foreground</span> <span class="attr">android:drawable</span>=<span class="val">"@drawable/ic_launcher_foreground"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/adaptive-icon&gt;</span></div>
+  </details>
+</div>
+
+<!-- ==================== 方案 B ==================== -->
+<div class="scheme">
+  <div class="scheme-header">
+    <div class="scheme-label" style="background:linear-gradient(135deg,#FF9500,#FF5E3A);">B</div>
+    <div>
+      <div class="scheme-title">橙色渐变 + 白色大号等号</div>
+      <div class="scheme-desc">iOS 计算器风格 -- 温暖醒目，极简单符号，辨识度极高</div>
+    </div>
+  </div>
+  <div class="color-spec">
+    <div class="color-chip"><span class="swatch" style="background:linear-gradient(135deg,#FF9500,#FF5E3A);"></span>渐变 #FF9500 -> #FF5E3A</div>
+    <div class="color-chip"><span class="swatch" style="background:#FFFFFF;"></span>符号 #FFFFFF</div>
+  </div>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:128px;height:128px;">
+        <svg width="128" height="128" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bgB" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF9500"/>
+              <stop offset="100%" stop-color="#FF5E3A"/>
+            </linearGradient>
+          </defs>
+          <rect width="108" height="108" fill="url(#bgB)"/>
+          <!-- Large "=" sign centered -->
+          <rect x="34" y="45" width="40" height="4" rx="2" fill="#FFFFFF"/>
+          <rect x="34" y="59" width="40" height="4" rx="2" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <div class="size-label">128px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:64px;height:64px;">
+        <svg width="64" height="64" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgB2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF9500"/><stop offset="100%" stop-color="#FF5E3A"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgB2)"/>
+          <rect x="34" y="45" width="40" height="4" rx="2" fill="#FFF"/><rect x="34" y="59" width="40" height="4" rx="2" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="size-label">64px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:48px;height:48px;">
+        <svg width="48" height="48" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgB3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF9500"/><stop offset="100%" stop-color="#FF5E3A"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgB3)"/>
+          <rect x="34" y="45" width="40" height="4" rx="2" fill="#FFF"/><rect x="34" y="59" width="40" height="4" rx="2" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="size-label">48px</div>
+    </div>
+  </div>
+  <details>
+    <summary>查看 Android XML 代码</summary>
+    <div class="code-block"><span class="comment">&lt;!-- res/drawable/ic_launcher_background.xml --&gt;</span>
+<span class="tag">&lt;shape</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;gradient</span>
+    <span class="attr">android:type</span>=<span class="val">"linear"</span>
+    <span class="attr">android:startColor</span>=<span class="val">"#FF9500"</span>
+    <span class="attr">android:endColor</span>=<span class="val">"#FF5E3A"</span>
+    <span class="attr">android:angle</span>=<span class="val">"135"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/shape&gt;</span>
+
+<span class="comment">&lt;!-- res/drawable/ic_launcher_foreground.xml --&gt;</span>
+<span class="tag">&lt;vector</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">android:width</span>=<span class="val">"108dp"</span> <span class="attr">android:height</span>=<span class="val">"108dp"</span>
+    <span class="attr">android:viewportWidth</span>=<span class="val">"108"</span> <span class="attr">android:viewportHeight</span>=<span class="val">"108"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- Equals sign --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M34,45h40a2,2 0 0 1 0,4h-40a2,2 0 0 1 0,-4z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M34,59h40a2,2 0 0 1 0,4h-40a2,2 0 0 1 0,-4z"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/vector&gt;</span></div>
+  </details>
+</div>
+
+<!-- ==================== 方案 C ==================== -->
+<div class="scheme">
+  <div class="scheme-header">
+    <div class="scheme-label" style="background:#F3F4F6;color:#1D1D1F;">C</div>
+    <div>
+      <div class="scheme-title">白底 + 四色符号</div>
+      <div class="scheme-desc">Google/小米风格 -- 清新现代，多彩活泼，适合年轻用户</div>
+    </div>
+  </div>
+  <div class="color-spec">
+    <div class="color-chip"><span class="swatch" style="background:#F8F9FA; border: 1px solid #E0E0E0;"></span>背景 #F8F9FA</div>
+    <div class="color-chip"><span class="swatch" style="background:#4285F4;"></span>蓝 #4285F4</div>
+    <div class="color-chip"><span class="swatch" style="background:#EA4335;"></span>红 #EA4335</div>
+    <div class="color-chip"><span class="swatch" style="background:#FBBC05;"></span>黄 #FBBC05</div>
+    <div class="color-chip"><span class="swatch" style="background:#34A853;"></span>绿 #34A853</div>
+  </div>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:128px;height:128px;">
+        <svg width="128" height="128" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F8F9FA"/>
+          <!-- Divide (blue) top-left -->
+          <circle cx="40" cy="36.5" r="2.2" fill="#4285F4"/>
+          <rect x="33.5" y="41.2" width="13" height="2.6" rx="1.3" fill="#4285F4"/>
+          <circle cx="40" cy="48.5" r="2.2" fill="#4285F4"/>
+          <!-- Multiply (red) top-right -->
+          <g transform="translate(68,42.5)">
+            <rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(45)"/>
+            <rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(-45)"/>
+          </g>
+          <!-- Subtract (yellow) bottom-left -->
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FBBC05"/>
+          <!-- Plus (green) bottom-right -->
+          <rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#34A853"/>
+          <rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#34A853"/>
+        </svg>
+      </div>
+      <div class="size-label">128px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:64px;height:64px;">
+        <svg width="64" height="64" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F8F9FA"/>
+          <circle cx="40" cy="36.5" r="2.2" fill="#4285F4"/><rect x="33.5" y="41.2" width="13" height="2.6" rx="1.3" fill="#4285F4"/><circle cx="40" cy="48.5" r="2.2" fill="#4285F4"/>
+          <g transform="translate(68,42.5)"><rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(45)"/><rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(-45)"/></g>
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FBBC05"/>
+          <rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#34A853"/><rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#34A853"/>
+        </svg>
+      </div>
+      <div class="size-label">64px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:48px;height:48px;">
+        <svg width="48" height="48" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F8F9FA"/>
+          <circle cx="40" cy="36.5" r="2.2" fill="#4285F4"/><rect x="33.5" y="41.2" width="13" height="2.6" rx="1.3" fill="#4285F4"/><circle cx="40" cy="48.5" r="2.2" fill="#4285F4"/>
+          <g transform="translate(68,42.5)"><rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(45)"/><rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(-45)"/></g>
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FBBC05"/>
+          <rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#34A853"/><rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#34A853"/>
+        </svg>
+      </div>
+      <div class="size-label">48px</div>
+    </div>
+  </div>
+  <details>
+    <summary>查看 Android XML 代码</summary>
+    <div class="code-block"><span class="comment">&lt;!-- res/values/ic_launcher_background.xml --&gt;</span>
+<span class="tag">&lt;resources&gt;</span>
+  <span class="tag">&lt;color</span> <span class="attr">name</span>=<span class="val">"ic_launcher_background"</span><span class="tag">&gt;</span>#F8F9FA<span class="tag">&lt;/color&gt;</span>
+<span class="tag">&lt;/resources&gt;</span>
+
+<span class="comment">&lt;!-- res/drawable/ic_launcher_foreground.xml --&gt;</span>
+<span class="tag">&lt;vector</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">android:width</span>=<span class="val">"108dp"</span> <span class="attr">android:height</span>=<span class="val">"108dp"</span>
+    <span class="attr">android:viewportWidth</span>=<span class="val">"108"</span> <span class="attr">android:viewportHeight</span>=<span class="val">"108"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- Divide (blue) --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#4285F4"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M40,34.3a2.2,2.2 0 1,1 0,4.4a2.2,2.2 0 1,1 0,-4.4z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#4285F4"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M33.5,41.2h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#4285F4"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M40,46.3a2.2,2.2 0 1,1 0,4.4a2.2,2.2 0 1,1 0,-4.4z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Multiply (red) --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#EA4335"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M63.04,37.54l9.9,9.9a1.3,1.3 0 0 1 -1.84,1.84l-9.9,-9.9a1.3,1.3 0 0 1 1.84,-1.84z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#EA4335"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M72.94,37.54l-9.9,9.9a1.3,1.3 0 0 1 -1.84,-1.84l9.9,-9.9a1.3,1.3 0 0 1 1.84,1.84z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Subtract (yellow) --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FBBC05"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M33.5,64.4h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Plus (green) --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#34A853"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M61.5,64.4h13a1.3,1.3 0 0 1 0,2.6h-13a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#34A853"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M66.7,59.2v13a1.3,1.3 0 0 1 -2.6,0v-13a1.3,1.3 0 0 1 2.6,0z"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/vector&gt;</span></div>
+  </details>
+</div>
+
+<!-- ==================== 方案 D ==================== -->
+<div class="scheme">
+  <div class="scheme-header">
+    <div class="scheme-label" style="background:linear-gradient(135deg,#0D47A1,#00ACC1);">D</div>
+    <div>
+      <div class="scheme-title">深蓝/青色渐变 + 中心加号 + 角落符号</div>
+      <div class="scheme-desc">科技感 -- 深邃专业，主次分明的层次设计</div>
+    </div>
+  </div>
+  <div class="color-spec">
+    <div class="color-chip"><span class="swatch" style="background:linear-gradient(150deg,#0D47A1,#00ACC1);"></span>渐变 #0D47A1 -> #00ACC1</div>
+    <div class="color-chip"><span class="swatch" style="background:#FFFFFF;"></span>主符号 #FFFFFF</div>
+    <div class="color-chip"><span class="swatch" style="background:rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.5);"></span>辅助 35% 白</div>
+  </div>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:128px;height:128px;">
+        <svg width="128" height="128" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bgD" x1="0%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#0D47A1"/>
+              <stop offset="100%" stop-color="#00ACC1"/>
+            </linearGradient>
+          </defs>
+          <rect width="108" height="108" fill="url(#bgD)"/>
+          <!-- Large central plus -->
+          <rect x="38" y="52.2" width="32" height="3.6" rx="1.8" fill="#FFFFFF"/>
+          <rect x="52.2" y="38" width="3.6" height="32" rx="1.8" fill="#FFFFFF"/>
+          <!-- Small decorative: divide (top-left) -->
+          <circle cx="32" cy="31" r="1.6" fill="rgba(255,255,255,0.35)"/>
+          <rect x="28" y="35" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+          <circle cx="32" cy="40.6" r="1.6" fill="rgba(255,255,255,0.35)"/>
+          <!-- Small decorative: multiply (top-right) -->
+          <g transform="translate(76,34)">
+            <rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(45)"/>
+            <rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(-45)"/>
+          </g>
+          <!-- Small decorative: equals (bottom-right) -->
+          <rect x="72" y="72" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+          <rect x="72" y="76.2" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+          <!-- Small decorative: subtract (bottom-left) -->
+          <rect x="28" y="74" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+        </svg>
+      </div>
+      <div class="size-label">128px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:64px;height:64px;">
+        <svg width="64" height="64" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgD2" x1="0%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#0D47A1"/><stop offset="100%" stop-color="#00ACC1"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgD2)"/>
+          <rect x="38" y="52.2" width="32" height="3.6" rx="1.8" fill="#FFF"/><rect x="52.2" y="38" width="3.6" height="32" rx="1.8" fill="#FFF"/>
+          <circle cx="32" cy="31" r="1.6" fill="rgba(255,255,255,0.35)"/><rect x="28" y="35" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/><circle cx="32" cy="40.6" r="1.6" fill="rgba(255,255,255,0.35)"/>
+          <g transform="translate(76,34)"><rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(45)"/><rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(-45)"/></g>
+          <rect x="72" y="72" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/><rect x="72" y="76.2" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+          <rect x="28" y="74" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+        </svg>
+      </div>
+      <div class="size-label">64px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:48px;height:48px;">
+        <svg width="48" height="48" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgD3" x1="0%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#0D47A1"/><stop offset="100%" stop-color="#00ACC1"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgD3)"/>
+          <rect x="38" y="52.2" width="32" height="3.6" rx="1.8" fill="#FFF"/><rect x="52.2" y="38" width="3.6" height="32" rx="1.8" fill="#FFF"/>
+          <circle cx="32" cy="31" r="1.6" fill="rgba(255,255,255,0.35)"/><rect x="28" y="35" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/><circle cx="32" cy="40.6" r="1.6" fill="rgba(255,255,255,0.35)"/>
+          <g transform="translate(76,34)"><rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(45)"/><rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(-45)"/></g>
+          <rect x="72" y="72" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/><rect x="72" y="76.2" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+          <rect x="28" y="74" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+        </svg>
+      </div>
+      <div class="size-label">48px</div>
+    </div>
+  </div>
+  <details>
+    <summary>查看 Android XML 代码</summary>
+    <div class="code-block"><span class="comment">&lt;!-- res/drawable/ic_launcher_background.xml --&gt;</span>
+<span class="tag">&lt;shape</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;gradient</span>
+    <span class="attr">android:type</span>=<span class="val">"linear"</span>
+    <span class="attr">android:startColor</span>=<span class="val">"#0D47A1"</span>
+    <span class="attr">android:endColor</span>=<span class="val">"#00ACC1"</span>
+    <span class="attr">android:angle</span>=<span class="val">"135"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/shape&gt;</span>
+
+<span class="comment">&lt;!-- res/drawable/ic_launcher_foreground.xml --&gt;</span>
+<span class="tag">&lt;vector</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">android:width</span>=<span class="val">"108dp"</span> <span class="attr">android:height</span>=<span class="val">"108dp"</span>
+    <span class="attr">android:viewportWidth</span>=<span class="val">"108"</span> <span class="attr">android:viewportHeight</span>=<span class="val">"108"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- Central large plus --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M38,52.2h32a1.8,1.8 0 0 1 0,3.6h-32a1.8,1.8 0 0 1 0,-3.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M52.2,38v32a1.8,1.8 0 0 1 -3.6,0v-32a1.8,1.8 0 0 1 3.6,0z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Decorative divide (top-left) alpha=0x59 --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#59FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M32,29.4a1.6,1.6 0 1,1 0,3.2a1.6,1.6 0 1,1 0,-3.2z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#59FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M28,35h8a0.8,0.8 0 0 1 0,1.6h-8a0.8,0.8 0 0 1 0,-1.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#59FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M32,39a1.6,1.6 0 1,1 0,3.2a1.6,1.6 0 1,1 0,-3.2z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- More decorative symbols omitted for brevity --&gt;</span>
+<span class="tag">&lt;/vector&gt;</span></div>
+  </details>
+</div>
+
+<!-- ==================== 方案 E ==================== -->
+<div class="scheme">
+  <div class="scheme-header">
+    <div class="scheme-label" style="background:linear-gradient(135deg,#2E7D32,#66BB6A);">E</div>
+    <div>
+      <div class="scheme-title">绿色渐变 + 白色四符号竖排</div>
+      <div class="scheme-desc">清新自然 -- 四个运算符纵向排列，像计算器侧边栏的运算符</div>
+    </div>
+  </div>
+  <div class="color-spec">
+    <div class="color-chip"><span class="swatch" style="background:linear-gradient(150deg,#2E7D32,#66BB6A);"></span>渐变 #2E7D32 -> #66BB6A</div>
+    <div class="color-chip"><span class="swatch" style="background:#FFFFFF;"></span>符号 #FFFFFF</div>
+  </div>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:128px;height:128px;">
+        <svg width="128" height="128" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bgE" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#2E7D32"/>
+              <stop offset="100%" stop-color="#66BB6A"/>
+            </linearGradient>
+          </defs>
+          <rect width="108" height="108" fill="url(#bgE)"/>
+          <!-- Vertical stack centered at x=54 -->
+          <!-- Plus at y=31 -->
+          <rect x="47" y="29.7" width="14" height="2.6" rx="1.3" fill="#FFFFFF"/>
+          <rect x="52.7" y="24" width="2.6" height="14" rx="1.3" fill="#FFFFFF"/>
+          <!-- Subtract at y=46 -->
+          <rect x="47" y="44.7" width="14" height="2.6" rx="1.3" fill="#FFFFFF"/>
+          <!-- Multiply at y=60 -->
+          <g transform="translate(54,60)">
+            <rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFFFFF" transform="rotate(45)"/>
+            <rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFFFFF" transform="rotate(-45)"/>
+          </g>
+          <!-- Divide at y=75 -->
+          <circle cx="54" cy="70.5" r="2" fill="#FFFFFF"/>
+          <rect x="47" y="74.7" width="14" height="2.6" rx="1.3" fill="#FFFFFF"/>
+          <circle cx="54" cy="81.5" r="2" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <div class="size-label">128px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:64px;height:64px;">
+        <svg width="64" height="64" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgE2" x1="20%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#2E7D32"/><stop offset="100%" stop-color="#66BB6A"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgE2)"/>
+          <rect x="47" y="29.7" width="14" height="2.6" rx="1.3" fill="#FFF"/><rect x="52.7" y="24" width="2.6" height="14" rx="1.3" fill="#FFF"/>
+          <rect x="47" y="44.7" width="14" height="2.6" rx="1.3" fill="#FFF"/>
+          <g transform="translate(54,60)"><rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFF" transform="rotate(45)"/><rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFF" transform="rotate(-45)"/></g>
+          <circle cx="54" cy="70.5" r="2" fill="#FFF"/><rect x="47" y="74.7" width="14" height="2.6" rx="1.3" fill="#FFF"/><circle cx="54" cy="81.5" r="2" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="size-label">64px</div>
+    </div>
+    <div class="preview-item">
+      <div class="icon-wrap" style="width:48px;height:48px;">
+        <svg width="48" height="48" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bgE3" x1="20%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#2E7D32"/><stop offset="100%" stop-color="#66BB6A"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#bgE3)"/>
+          <rect x="47" y="29.7" width="14" height="2.6" rx="1.3" fill="#FFF"/><rect x="52.7" y="24" width="2.6" height="14" rx="1.3" fill="#FFF"/>
+          <rect x="47" y="44.7" width="14" height="2.6" rx="1.3" fill="#FFF"/>
+          <g transform="translate(54,60)"><rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFF" transform="rotate(45)"/><rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFF" transform="rotate(-45)"/></g>
+          <circle cx="54" cy="70.5" r="2" fill="#FFF"/><rect x="47" y="74.7" width="14" height="2.6" rx="1.3" fill="#FFF"/><circle cx="54" cy="81.5" r="2" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="size-label">48px</div>
+    </div>
+  </div>
+  <details>
+    <summary>查看 Android XML 代码</summary>
+    <div class="code-block"><span class="comment">&lt;!-- res/drawable/ic_launcher_background.xml --&gt;</span>
+<span class="tag">&lt;shape</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;gradient</span>
+    <span class="attr">android:type</span>=<span class="val">"linear"</span>
+    <span class="attr">android:startColor</span>=<span class="val">"#2E7D32"</span>
+    <span class="attr">android:endColor</span>=<span class="val">"#66BB6A"</span>
+    <span class="attr">android:angle</span>=<span class="val">"135"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/shape&gt;</span>
+
+<span class="comment">&lt;!-- res/drawable/ic_launcher_foreground.xml --&gt;</span>
+<span class="tag">&lt;vector</span> <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">android:width</span>=<span class="val">"108dp"</span> <span class="attr">android:height</span>=<span class="val">"108dp"</span>
+    <span class="attr">android:viewportWidth</span>=<span class="val">"108"</span> <span class="attr">android:viewportHeight</span>=<span class="val">"108"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- Plus --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M47,29.7h14a1.3,1.3 0 0 1 0,2.6h-14a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M52.7,24v14a1.3,1.3 0 0 1 -2.6,0v-14a1.3,1.3 0 0 1 2.6,0z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Subtract --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M47,44.7h14a1.3,1.3 0 0 1 0,2.6h-14a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Multiply --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M49.76,55.76l8.49,8.49a1.3,1.3 0 0 1 -1.84,1.84l-8.49,-8.49a1.3,1.3 0 0 1 1.84,-1.84z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M58.24,55.76l-8.49,8.49a1.3,1.3 0 0 1 -1.84,-1.84l8.49,-8.49a1.3,1.3 0 0 1 1.84,1.84z"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- Divide --&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M54,68.5a2,2 0 1,1 0,4a2,2 0 1,1 0,-4z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M47,74.7h14a1.3,1.3 0 0 1 0,2.6h-14a1.3,1.3 0 0 1 0,-2.6z"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;path</span> <span class="attr">android:fillColor</span>=<span class="val">"#FFFFFF"</span>
+    <span class="attr">android:pathData</span>=<span class="val">"M54,79.5a2,2 0 1,1 0,4a2,2 0 1,1 0,-4z"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/vector&gt;</span></div>
+  </details>
+</div>
+
+<!-- ==================== 桌面模拟 ==================== -->
+<div class="desktop-sim">
+  <h3>Android 桌面模拟 -- 深色壁纸背景</h3>
+  <div class="dock">
+    <div class="dock-item">
+      <div class="dock-icon">
+        <svg width="56" height="56" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="dkA" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#667EEA"/><stop offset="100%" stop-color="#764BA2"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#dkA)"/>
+          <circle cx="40" cy="37" r="2.2" fill="#FFF"/><rect x="33.5" y="41.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><circle cx="40" cy="48" r="2.2" fill="#FFF"/>
+          <g transform="translate(68,42.5)"><rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFF" transform="rotate(45)"/><rect x="-7" y="-1.3" width="14" height="2.6" rx="1.3" fill="#FFF" transform="rotate(-45)"/></g>
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FFF"/><rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="dock-label">A 蓝紫</div>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon">
+        <svg width="56" height="56" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="dkB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF9500"/><stop offset="100%" stop-color="#FF5E3A"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#dkB)"/>
+          <rect x="34" y="45" width="40" height="4" rx="2" fill="#FFF"/><rect x="34" y="59" width="40" height="4" rx="2" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="dock-label">B 橙色</div>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon">
+        <svg width="56" height="56" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F8F9FA"/>
+          <circle cx="40" cy="36.5" r="2.2" fill="#4285F4"/><rect x="33.5" y="41.2" width="13" height="2.6" rx="1.3" fill="#4285F4"/><circle cx="40" cy="48.5" r="2.2" fill="#4285F4"/>
+          <g transform="translate(68,42.5)"><rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(45)"/><rect x="-6.5" y="-1.3" width="13" height="2.6" rx="1.3" fill="#EA4335" transform="rotate(-45)"/></g>
+          <rect x="33.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#FBBC05"/><rect x="61.5" y="64.4" width="13" height="2.6" rx="1.3" fill="#34A853"/><rect x="66.7" y="59.2" width="2.6" height="13" rx="1.3" fill="#34A853"/>
+        </svg>
+      </div>
+      <div class="dock-label">C 白底</div>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon">
+        <svg width="56" height="56" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="dkD" x1="0%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#0D47A1"/><stop offset="100%" stop-color="#00ACC1"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#dkD)"/>
+          <rect x="38" y="52.2" width="32" height="3.6" rx="1.8" fill="#FFF"/><rect x="52.2" y="38" width="3.6" height="32" rx="1.8" fill="#FFF"/>
+          <circle cx="32" cy="31" r="1.6" fill="rgba(255,255,255,0.35)"/><rect x="28" y="35" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/><circle cx="32" cy="40.6" r="1.6" fill="rgba(255,255,255,0.35)"/>
+          <g transform="translate(76,34)"><rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(45)"/><rect x="-4.5" y="-0.8" width="9" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)" transform="rotate(-45)"/></g>
+          <rect x="72" y="72" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/><rect x="72" y="76.2" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+          <rect x="28" y="74" width="8" height="1.6" rx="0.8" fill="rgba(255,255,255,0.35)"/>
+        </svg>
+      </div>
+      <div class="dock-label">D 深蓝</div>
+    </div>
+    <div class="dock-item">
+      <div class="dock-icon">
+        <svg width="56" height="56" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="dkE" x1="20%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#2E7D32"/><stop offset="100%" stop-color="#66BB6A"/></linearGradient></defs>
+          <rect width="108" height="108" fill="url(#dkE)"/>
+          <rect x="47" y="29.7" width="14" height="2.6" rx="1.3" fill="#FFF"/><rect x="52.7" y="24" width="2.6" height="14" rx="1.3" fill="#FFF"/>
+          <rect x="47" y="44.7" width="14" height="2.6" rx="1.3" fill="#FFF"/>
+          <g transform="translate(54,60)"><rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFF" transform="rotate(45)"/><rect x="-6" y="-1.3" width="12" height="2.6" rx="1.3" fill="#FFF" transform="rotate(-45)"/></g>
+          <circle cx="54" cy="70.5" r="2" fill="#FFF"/><rect x="47" y="74.7" width="14" height="2.6" rx="1.3" fill="#FFF"/><circle cx="54" cy="81.5" r="2" fill="#FFF"/>
+        </svg>
+      </div>
+      <div class="dock-label">E 绿色</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 对比表格 ==================== -->
+<div style="max-width:960px;margin:32px auto 0;padding:0 20px;">
+  <h3 style="font-size:18px;font-weight:600;margin-bottom:16px;">方案对比分析</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.6;">
+    <thead>
+      <tr style="border-bottom:2px solid #E5E5E7;">
+        <th style="text-align:left;padding:8px 12px;color:#86868B;font-weight:500;">方案</th>
+        <th style="text-align:left;padding:8px 12px;color:#86868B;font-weight:500;">风格定位</th>
+        <th style="text-align:left;padding:8px 12px;color:#86868B;font-weight:500;">符号策略</th>
+        <th style="text-align:left;padding:8px 12px;color:#86868B;font-weight:500;">伪装自然度</th>
+        <th style="text-align:left;padding:8px 12px;color:#86868B;font-weight:500;">小尺寸辨识</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #F3F4F6;">
+        <td style="padding:8px 12px;font-weight:600;">A 蓝紫渐变</td>
+        <td style="padding:8px 12px;">三星/华为旗舰风</td>
+        <td style="padding:8px 12px;">2x2 四符号网格</td>
+        <td style="padding:8px 12px;">极高 -- 最像系统预装</td>
+        <td style="padding:8px 12px;">良好</td>
+      </tr>
+      <tr style="border-bottom:1px solid #F3F4F6;">
+        <td style="padding:8px 12px;font-weight:600;">B 橙色渐变</td>
+        <td style="padding:8px 12px;">iOS 计算器致敬</td>
+        <td style="padding:8px 12px;">单个大号 "="</td>
+        <td style="padding:8px 12px;">高 -- 经典配色</td>
+        <td style="padding:8px 12px;">优秀 -- 最简最清晰</td>
+      </tr>
+      <tr style="border-bottom:1px solid #F3F4F6;">
+        <td style="padding:8px 12px;font-weight:600;">C 白底彩色</td>
+        <td style="padding:8px 12px;">Google Material 风</td>
+        <td style="padding:8px 12px;">四色四符号</td>
+        <td style="padding:8px 12px;">高 -- 像第三方精品 app</td>
+        <td style="padding:8px 12px;">良好</td>
+      </tr>
+      <tr style="border-bottom:1px solid #F3F4F6;">
+        <td style="padding:8px 12px;font-weight:600;">D 深蓝青色</td>
+        <td style="padding:8px 12px;">科技/专业工具</td>
+        <td style="padding:8px 12px;">大 "+" + 角落小符号</td>
+        <td style="padding:8px 12px;">高 -- 像科学计算器</td>
+        <td style="padding:8px 12px;">优秀 -- 中心突出</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;font-weight:600;">E 绿色渐变</td>
+        <td style="padding:8px 12px;">清新自然</td>
+        <td style="padding:8px 12px;">四符号纵向排列</td>
+        <td style="padding:8px 12px;">中高 -- 差异化设计</td>
+        <td style="padding:8px 12px;">一般 -- 符号较密</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:24px;padding:20px;background:#EFF6FF;border-radius:12px;font-size:14px;line-height:1.7;color:#1E40AF;">
+    <strong>设计建议：</strong><br>
+    如果目标是"完美伪装系统计算器"，推荐 <strong>方案 A（蓝紫渐变）</strong>，在各大 Android 厂商桌面上毫无违和感。<br>
+    如果追求"一眼就知道是计算器"的辨识度，推荐 <strong>方案 B（橙色等号）</strong>，48px 下依然清晰。<br>
+    如果喜欢差异化但不失专业，推荐 <strong>方案 D（深蓝科技感）</strong>，主次分明的层次设计很耐看。
+  </div>
+</div>
+
+<div style="text-align:center;padding:48px 20px 32px;color:#86868B;font-size:13px;">
+  Privacy Vault Icon Redesign -- Android Adaptive Icon 108dp Canvas / 66dp Safe Zone<br>
+  Generated 2026-04-03
+</div>
+
+</body>
+</html>
