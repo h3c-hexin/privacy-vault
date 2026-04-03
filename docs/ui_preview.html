@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>隐私保险箱 - UI 预览</title>
+<style>
+/* ========== CSS Variables (Design Tokens) ========== */
+:root {
+  /* Primary */
+  --primary-50: #E8EDF5;
+  --primary-100: #C5D1E8;
+  --primary-200: #9FB3D8;
+  --primary-300: #7A96C8;
+  --primary-400: #5A7DB8;
+  --primary-500: #3D64A8;
+  --primary-600: #2F5091;
+  --primary-700: #233D7A;
+  --primary-800: #1A2E5C;
+  --primary-900: #111D3D;
+
+  /* Neutral */
+  --neutral-0: #FFFFFF;
+  --neutral-50: #F7F8FA;
+  --neutral-100: #EEF0F4;
+  --neutral-200: #D8DCE4;
+  --neutral-300: #B8BEC8;
+  --neutral-400: #8E96A4;
+  --neutral-500: #6B7280;
+  --neutral-600: #4B5563;
+  --neutral-700: #374151;
+  --neutral-800: #1F2937;
+  --neutral-900: #111827;
+  --neutral-950: #0A0E17;
+
+  /* Semantic */
+  --success-light: #DCFCE7;
+  --success-main: #16A34A;
+  --success-dark: #15803D;
+  --warning-light: #FEF3C7;
+  --warning-main: #D97706;
+  --warning-dark: #B45309;
+  --error-light: #FEE2E2;
+  --error-main: #DC2626;
+  --error-dark: #B91C1C;
+  --info-light: #DBEAFE;
+  --info-main: #2563EB;
+  --info-dark: #1D4ED8;
+
+  /* Spacing */
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-base: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.16);
+  --shadow-overlay: 0 -4px 16px rgba(0,0,0,0.10);
+
+  /* Theme-aware variables (light mode defaults) */
+  --page-bg: var(--neutral-0);
+  --card-bg: var(--neutral-50);
+  --input-bg: var(--neutral-50);
+  --dialog-bg: var(--neutral-0);
+  --navbar-bg: var(--neutral-0);
+  --title-color: var(--neutral-700);
+  --body-color: var(--neutral-600);
+  --secondary-color: var(--neutral-500);
+  --placeholder-color: var(--neutral-300);
+  --divider-color: var(--neutral-100);
+  --border-color: var(--neutral-200);
+  --icon-color: var(--neutral-600);
+  --skeleton-color: var(--neutral-100);
+  --toast-bg: var(--neutral-800);
+  --toast-color: var(--neutral-0);
+  --switch-off: var(--neutral-200);
+  --card-shadow: var(--shadow-sm);
+  --disabled-bg: var(--neutral-200);
+  --disabled-color: var(--neutral-400);
+  --hover-bg: var(--neutral-50);
+}
+
+[data-theme="dark"] {
+  --page-bg: var(--neutral-900);
+  --card-bg: var(--neutral-800);
+  --input-bg: var(--neutral-800);
+  --dialog-bg: var(--neutral-800);
+  --navbar-bg: var(--neutral-900);
+  --title-color: var(--neutral-100);
+  --body-color: var(--neutral-200);
+  --secondary-color: var(--neutral-400);
+  --placeholder-color: var(--neutral-500);
+  --divider-color: var(--neutral-700);
+  --border-color: var(--neutral-700);
+  --icon-color: var(--neutral-300);
+  --skeleton-color: var(--neutral-800);
+  --toast-bg: var(--neutral-200);
+  --toast-color: var(--neutral-900);
+  --switch-off: var(--neutral-700);
+  --card-shadow: none;
+  --disabled-bg: var(--neutral-700);
+  --disabled-color: var(--neutral-500);
+  --hover-bg: var(--neutral-700);
+}
+
+/* ========== Base ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 16px 0;
+}
+
+/* ========== Controls Bar ========== */
+.controls {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #1F2937;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.controls button {
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.controls button:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.controls button.active {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: #fff;
+}
+
+.controls .theme-toggle {
+  background: var(--primary-700);
+  border-color: var(--primary-600);
+  color: #fff;
+  font-weight: 600;
+}
+.controls .theme-toggle:hover { background: var(--primary-600); }
+
+.controls .separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* ========== Phone Frame ========== */
+.phone-frame {
+  width: 375px;
+  min-height: 812px;
+  background: var(--page-bg);
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 4px #1a1a1a;
+  margin-top: 60px;
+  position: relative;
+  transition: background 0.3s;
+}
+
+/* Status Bar */
+.status-bar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--title-color);
+  background: var(--navbar-bg);
+  transition: all 0.3s;
+}
+.status-bar .time { font-size: 14px; font-weight: 700; }
+.status-bar .icons { display: flex; gap: 6px; font-size: 11px; }
+
+/* ========== Page Container ========== */
+.page { display: none; height: calc(812px - 44px); overflow-y: auto; position: relative; }
+.page.active { display: flex; flex-direction: column; }
+.page-scroll { flex: 1; overflow-y: auto; }
+
+/* ========== Navigation Bar ========== */
+.navbar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-base);
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--divider-color);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.navbar .back-btn {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; margin-left: -12px;
+  color: var(--icon-color);
+}
+.navbar .title {
+  font-size: 16px; font-weight: 500;
+  color: var(--title-color);
+  flex: 1;
+}
+.navbar .actions {
+  display: flex; gap: var(--space-sm);
+}
+.navbar .action-btn {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--icon-color);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.navbar .action-btn:hover { background: var(--hover-bg); }
+
+/* ========== Shared Components ========== */
+
+/* Primary Button */
+.btn-primary {
+  height: 48px; min-width: 120px;
+  padding: 0 24px;
+  border-radius: var(--radius-sm);
+  font-size: 16px; font-weight: 600;
+  color: var(--neutral-0);
+  background: var(--primary-500);
+  border: none; cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+}
+.btn-primary:hover { background: var(--primary-600); }
+.btn-primary:active { background: var(--primary-600); transform: scale(0.98); }
+.btn-primary:disabled, .btn-primary.disabled {
+  background: var(--disabled-bg); color: var(--disabled-color); cursor: not-allowed;
+}
+.btn-primary.loading {
+  position: relative; color: transparent;
+}
+.btn-primary.loading::after {
+  content: ''; position: absolute;
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  top: 50%; left: 50%;
+  margin: -10px 0 0 -10px;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: var(--radius-sm);
+  font-size: 16px; font-weight: 600;
+  color: var(--primary-500);
+  background: transparent;
+  border: 1.5px solid var(--primary-500);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: var(--primary-50); }
+.btn-secondary:active { background: var(--primary-50); border-color: var(--primary-600); color: var(--primary-600); }
+.btn-secondary.disabled {
+  border-color: var(--disabled-bg); color: var(--disabled-color); cursor: not-allowed;
+}
+
+/* Text Button */
+.btn-text {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px; font-weight: 500;
+  color: var(--primary-500);
+  background: transparent;
+  border: none; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-text:hover { background: rgba(61,100,168,0.08); border-radius: var(--radius-sm); }
+.btn-text.disabled { color: var(--disabled-color); cursor: not-allowed; }
+
+/* Danger Button */
+.btn-danger {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: var(--radius-sm);
+  font-size: 16px; font-weight: 600;
+  color: var(--neutral-0);
+  background: var(--error-main);
+  border: none; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-danger:hover { background: var(--error-dark); }
+.btn-danger:active { background: var(--error-dark); transform: scale(0.98); }
+
+/* FAB */
+.fab {
+  position: absolute;
+  bottom: 16px; right: 16px;
+  width: 56px; height: 56px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-500);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.15s;
+  border: none;
+}
+.fab:hover { background: var(--primary-600); }
+.fab:active { transform: scale(0.95); box-shadow: var(--shadow-sm); }
+
+/* Switch */
+.switch {
+  width: 52px; height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--switch-off);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.switch.on { background: var(--primary-500); }
+.switch .knob {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--neutral-0);
+  position: absolute;
+  top: 3px; left: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: left 0.2s;
+}
+.switch.on .knob { left: 27px; }
+
+/* Tab Bar */
+.tab-bar {
+  height: 44px;
+  display: flex;
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--divider-color);
+  position: relative;
+  flex-shrink: 0;
+}
+.tab-item {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 500;
+  color: var(--secondary-color);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+.tab-item.active { color: var(--primary-500); }
+.tab-item.active::after {
+  content: '';
+  position: absolute; bottom: 0;
+  width: 32px; height: 3px;
+  background: var(--primary-500);
+  border-radius: 1.5px;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--divider-color);
+  margin: 0 var(--space-base);
+}
+
+/* Input */
+.text-input {
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  padding: 0 var(--space-base);
+  font-size: 14px;
+  color: var(--body-color);
+  width: 100%;
+  outline: none;
+  transition: all 0.15s;
+}
+.text-input:focus {
+  border: 2px solid var(--primary-500);
+  background: var(--neutral-0);
+}
+.text-input::placeholder { color: var(--placeholder-color); }
+
+/* Search Bar */
+.search-bar {
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--card-bg);
+  display: flex; align-items: center;
+  padding: 0 var(--space-base);
+  gap: var(--space-sm);
+  margin: var(--space-sm) var(--space-base);
+}
+.search-bar .search-icon { color: var(--secondary-color); font-size: 20px; }
+.search-bar input {
+  flex: 1; border: none; background: transparent;
+  font-size: 14px; color: var(--body-color); outline: none;
+}
+.search-bar input::placeholder { color: var(--placeholder-color); }
+
+/* Dialog Overlay */
+.dialog-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 20;
+}
+.dialog {
+  width: 320px;
+  border-radius: var(--radius-lg);
+  background: var(--dialog-bg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-lg);
+}
+.dialog h3 {
+  font-size: 18px; font-weight: 600;
+  color: var(--title-color);
+  margin-bottom: var(--space-sm);
+}
+.dialog p {
+  font-size: 14px;
+  color: var(--secondary-color);
+  line-height: 1.5;
+}
+.dialog .dialog-actions {
+  display: flex; justify-content: flex-end;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+/* Toast */
+.toast-demo {
+  position: absolute;
+  bottom: 80px; left: 16px; right: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--toast-bg);
+  color: var(--toast-color);
+  font-size: 14px;
+  text-align: center;
+  z-index: 15;
+}
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+.skeleton {
+  background: var(--skeleton-color);
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-xs);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Setting List Item */
+.setting-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-base);
+  min-height: 56px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.setting-item:hover { background: var(--hover-bg); }
+.setting-item .setting-icon {
+  width: 24px; height: 24px;
+  color: var(--secondary-color);
+  margin-right: var(--space-base);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.setting-item .setting-content { flex: 1; min-width: 0; }
+.setting-item .setting-title {
+  font-size: 16px; color: var(--title-color); line-height: 1.6;
+}
+.setting-item .setting-desc {
+  font-size: 12px; color: var(--secondary-color); line-height: 1.5;
+}
+.setting-item .setting-value {
+  font-size: 14px; color: var(--secondary-color);
+  margin-right: 4px;
+}
+.setting-item .chevron {
+  color: var(--placeholder-color);
+  font-size: 20px;
+}
+.setting-item + .setting-item {
+  border-top: 1px solid var(--divider-color);
+  margin-left: 56px;
+  padding-left: 0;
+  margin-right: 0;
+}
+/* Fix: reset margin for items after group title */
+.group-title + .setting-item { margin-left: 0; }
+.group-title + .setting-item + .setting-item { margin-left: 56px; padding-left: 0; }
+
+.group-title {
+  font-size: 12px; font-weight: 500;
+  color: var(--secondary-color);
+  padding: var(--space-lg) var(--space-base) var(--space-sm);
+}
+
+/* Bottom Sheet */
+.bottom-sheet {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: var(--dialog-bg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding-bottom: 16px;
+  z-index: 25;
+  box-shadow: var(--shadow-overlay);
+}
+.bottom-sheet .handle {
+  width: 40px; height: 4px;
+  border-radius: 2px;
+  background: var(--placeholder-color);
+  margin: var(--space-sm) auto var(--space-base);
+}
+.bottom-sheet .sheet-item {
+  height: 52px;
+  display: flex; align-items: center;
+  padding: 0 var(--space-base);
+  gap: var(--space-base);
+  font-size: 16px;
+  color: var(--title-color);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.bottom-sheet .sheet-item:hover { background: var(--hover-bg); }
+.bottom-sheet .sheet-item .sheet-icon { color: var(--icon-color); font-size: 24px; }
+.bottom-sheet .sheet-item.danger { color: var(--error-main); }
+.bottom-sheet .sheet-item.danger .sheet-icon { color: var(--error-main); }
+
+/* Progress bar */
+.progress-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+.progress-bar .fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--primary-500);
+  transition: width 0.3s;
+}
+
+/* Circular progress */
+.circular-progress {
+  width: 80px; height: 80px;
+  position: relative;
+}
+.circular-progress svg { transform: rotate(-90deg); }
+.circular-progress .track {
+  fill: none;
+  stroke: var(--border-color);
+  stroke-width: 6;
+}
+.circular-progress .fill-ring {
+  fill: none;
+  stroke: var(--primary-500);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 226;
+  stroke-dashoffset: 50;
+  transition: stroke-dashoffset 0.3s;
+}
+.circular-progress .percent {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 600;
+  color: var(--title-color);
+}
+
+/* SVG icons - using simple unicode/text as substitute */
+.icon { font-style: normal; }
+
+/* ========== Page 1: Calculator ========== */
+.calc-display {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 var(--space-lg);
+  padding-bottom: var(--space-base);
+  background: var(--page-bg);
+}
+.calc-display .calc-expression {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 16px;
+  color: var(--secondary-color);
+  text-align: right;
+  margin-bottom: var(--space-sm);
+}
+.calc-display .calc-result {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--title-color);
+  text-align: right;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.calc-keyboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  flex-shrink: 0;
+  border-top: 1px solid var(--divider-color);
+}
+.calc-key {
+  height: 72px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background 0.05s;
+  border: none;
+  background: var(--page-bg);
+  color: var(--title-color);
+}
+.calc-key:active { filter: brightness(0.85); }
+.calc-key.func {
+  background: var(--card-bg);
+  color: var(--title-color);
+}
+.calc-key.op {
+  background: var(--primary-500);
+  color: var(--neutral-0);
+  font-size: 28px; font-weight: 500;
+}
+.calc-key.op:active { background: var(--primary-600); }
+.calc-key.op.selected { background: var(--primary-400); }
+.calc-key.zero { grid-column: span 2; }
+
+/* ========== Page 2: First Setup ========== */
+.setup-header {
+  text-align: center;
+  padding: var(--space-lg) var(--space-base);
+}
+.setup-header .app-logo {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+  margin: 0 auto var(--space-md);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 24px;
+}
+.setup-header .app-tagline {
+  font-size: 22px; font-weight: 600;
+  color: var(--title-color);
+  margin-bottom: var(--space-base);
+}
+.setup-header .step-text {
+  font-size: 12px;
+  color: var(--secondary-color);
+  margin-bottom: var(--space-sm);
+}
+.step-indicator {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0;
+  margin-bottom: var(--space-lg);
+}
+.step-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border-color);
+}
+.step-dot.active { background: var(--primary-500); box-shadow: 0 0 0 4px var(--primary-100); }
+.step-dot.done { background: var(--primary-500); }
+.step-line {
+  width: 24px; height: 2px;
+  background: var(--border-color);
+}
+.step-line.done { background: var(--primary-500); }
+
+/* PIN area */
+.pin-area {
+  text-align: center;
+  padding: 0 var(--space-base);
+}
+.pin-area h3 {
+  font-size: 18px; font-weight: 600;
+  color: var(--title-color);
+  margin-bottom: var(--space-sm);
+}
+.pin-area .pin-desc {
+  font-size: 14px;
+  color: var(--secondary-color);
+  margin-bottom: var(--space-lg);
+}
+.pin-dots {
+  display: flex; justify-content: center;
+  gap: var(--space-base);
+  margin-bottom: var(--space-lg);
+}
+.pin-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--placeholder-color);
+}
+.pin-dot.filled {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+}
+.pin-dot.error {
+  background: var(--error-main);
+  border-color: var(--error-main);
+}
+
+/* PIN Keyboard */
+.pin-keyboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 24px;
+  max-width: 280px;
+  margin: 0 auto;
+  padding: 0 var(--space-base);
+}
+.pin-key {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px; font-weight: 500;
+  color: var(--title-color);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  justify-self: center;
+  transition: background 0.1s;
+}
+.pin-key:hover { background: var(--hover-bg); }
+.pin-key:active { background: var(--card-bg); }
+.pin-key.empty { cursor: default; }
+.pin-key.empty:hover { background: transparent; }
+.pin-key.fingerprint { color: var(--primary-500); font-size: 28px; }
+.pin-key.backspace { color: var(--icon-color); font-size: 22px; }
+
+/* ========== Page 4: Home ========== */
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  padding: var(--space-base);
+}
+.folder-card {
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.folder-card:active { transform: scale(0.97); }
+.folder-card .folder-cover {
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, var(--primary-800), var(--primary-900));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--placeholder-color);
+  font-size: 32px;
+  overflow: hidden;
+}
+.folder-card .folder-cover.has-image {
+  background-size: cover;
+  background-position: center;
+}
+.folder-card .folder-info {
+  padding: var(--space-sm) var(--space-md);
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.folder-card .folder-name {
+  font-size: 14px; font-weight: 500;
+  color: var(--title-color);
+  display: flex; align-items: center; gap: 6px;
+}
+.folder-card .folder-count {
+  font-size: 12px;
+  color: var(--secondary-color);
+}
+
+/* Storage bar */
+.storage-bar {
+  height: 36px;
+  background: var(--card-bg);
+  display: flex; align-items: center;
+  padding: 0 var(--space-base);
+  gap: var(--space-sm);
+  border-top: 1px solid var(--divider-color);
+  flex-shrink: 0;
+}
+.storage-bar .storage-progress {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-color);
+}
+.storage-bar .storage-fill {
+  height: 100%; width: 30%;
+  border-radius: 2px;
+  background: var(--primary-500);
+}
+.storage-bar .storage-text {
+  font-size: 12px;
+  color: var(--secondary-color);
+  white-space: nowrap;
+}
+
+/* ========== Page 5: Folder Detail ========== */
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+}
+.thumb-item {
+  aspect-ratio: 1;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s;
+}
+.thumb-item:active { transform: scale(0.95); }
+.thumb-item .thumb-bg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.thumb-item .thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  color: var(--placeholder-color);
+}
+.thumb-item .duration-badge {
+  position: absolute;
+  bottom: 4px; right: 4px;
+  background: rgba(0,0,0,0.6);
+  border-radius: var(--radius-xs);
+  padding: 2px 4px;
+  font-size: 10px;
+  color: #fff;
+}
+.thumb-item .select-check {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  display: none;
+}
+.thumb-item .select-check.visible { display: block; }
+.thumb-item .select-check.checked {
+  display: flex;
+  align-items: center; justify-content: center;
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Multi-select navbar */
+.navbar.multi-select {
+  background: var(--primary-500);
+  border-bottom-color: var(--primary-600);
+}
+.navbar.multi-select .title,
+.navbar.multi-select .back-btn,
+.navbar.multi-select .action-btn { color: #fff; }
+
+/* Batch toolbar */
+.batch-toolbar {
+  height: 56px;
+  display: flex;
+  background: var(--card-bg);
+  border-top: 1px solid var(--divider-color);
+  flex-shrink: 0;
+}
+.batch-btn {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: var(--space-xs);
+  font-size: 12px;
+  color: var(--icon-color);
+  cursor: pointer;
+  border: none; background: transparent;
+  transition: background 0.15s;
+}
+.batch-btn:hover { background: var(--hover-bg); }
+.batch-btn .batch-icon { font-size: 24px; }
+.batch-btn.danger { color: var(--error-main); }
+
+/* ========== Page 6: Image Preview ========== */
+.preview-page {
+  background: var(--neutral-950);
+  position: relative;
+}
+.preview-page .preview-navbar {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 56px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent);
+  display: flex; align-items: center;
+  padding: 0 var(--space-base);
+  z-index: 5;
+}
+.preview-page .preview-navbar .back-btn,
+.preview-page .preview-navbar .title,
+.preview-page .preview-navbar .action-btn { color: #fff; }
+.preview-page .preview-navbar .title { font-size: 14px; }
+
+.preview-image-area {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.preview-image-area .placeholder-img {
+  width: 300px; height: 200px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: var(--space-sm);
+  color: var(--neutral-400);
+  font-size: 14px;
+}
+.preview-image-area .placeholder-img .big-icon { font-size: 48px; }
+
+.preview-thumb-strip {
+  height: 48px;
+  display: flex;
+  gap: 4px;
+  padding: 0 var(--space-base);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.preview-thumb-strip .mini-thumb {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+.preview-thumb-strip .mini-thumb.active { opacity: 1; border: 2px solid #fff; }
+
+.preview-actions {
+  height: 56px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.6), transparent);
+  display: flex;
+  flex-shrink: 0;
+}
+.preview-action-btn {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px;
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+  border: none; background: transparent;
+}
+.preview-action-btn .pa-icon { font-size: 24px; }
+
+/* ========== Page 7: Video Player ========== */
+.video-page {
+  background: var(--neutral-950);
+  position: relative;
+}
+.video-area {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.video-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: var(--space-base);
+  color: var(--neutral-400);
+}
+.play-btn-overlay {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 32px;
+  transition: background 0.15s;
+}
+.play-btn-overlay:hover { background: rgba(0,0,0,0.5); }
+
+.video-controls {
+  padding: var(--space-sm) var(--space-base);
+  flex-shrink: 0;
+}
+.video-progress {
+  display: flex; align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+.video-progress .time {
+  font-size: 12px; color: #fff;
+  font-family: 'Roboto Mono', monospace;
+  white-space: nowrap;
+}
+.video-progress .v-track {
+  flex: 1; height: 2px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 1px;
+  position: relative;
+}
+.video-progress .v-played {
+  height: 100%; width: 40%;
+  background: var(--primary-500);
+  border-radius: 1px;
+}
+.video-progress .v-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: -6px; left: 40%;
+  margin-left: -7px;
+}
+
+.video-bottom-actions {
+  height: 56px;
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* ========== Page 8: Import ========== */
+.import-source-card {
+  height: 80px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: var(--space-base);
+  display: flex; align-items: center;
+  gap: var(--space-base);
+  margin: 0 var(--space-base);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.import-source-card:hover { background: var(--primary-50); }
+[data-theme="dark"] .import-source-card:hover { background: var(--primary-900); }
+.import-source-card .source-icon {
+  font-size: 40px;
+  color: var(--primary-500);
+  flex-shrink: 0;
+}
+.import-source-card .source-info { flex: 1; }
+.import-source-card .source-title {
+  font-size: 16px; font-weight: 500;
+  color: var(--title-color);
+}
+.import-source-card .source-desc {
+  font-size: 12px;
+  color: var(--secondary-color);
+}
+
+/* ========== Page 9: Recycle Bin ========== */
+.trash-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-base);
+  gap: var(--space-md);
+  border-bottom: 1px solid var(--divider-color);
+}
+.trash-thumb {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: var(--placeholder-color);
+}
+.trash-info { flex: 1; min-width: 0; }
+.trash-name {
+  font-size: 14px; font-weight: 500;
+  color: var(--title-color);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.trash-date {
+  font-size: 12px;
+  color: var(--secondary-color);
+}
+.trash-actions { display: flex; gap: var(--space-sm); }
+.trash-action {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  border: none; background: transparent;
+  transition: background 0.15s;
+}
+.trash-action:hover { background: var(--hover-bg); }
+.trash-action.restore { color: var(--primary-500); }
+.trash-action.delete { color: var(--error-main); }
+
+/* ========== Page 11: Change Password ========== */
+/* Uses same pin-area styles */
+
+/* ========== Page 12: Support ========== */
+.support-page {
+  text-align: center;
+  padding: var(--space-lg) var(--space-base);
+}
+.support-icon {
+  font-size: 48px;
+  color: var(--primary-500);
+  margin-bottom: var(--space-base);
+}
+.support-title {
+  font-size: 18px; font-weight: 600;
+  color: var(--title-color);
+  margin-bottom: var(--space-base);
+}
+.support-desc {
+  font-size: 14px;
+  color: var(--secondary-color);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+}
+.qr-placeholder {
+  width: 200px; height: 200px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin: 0 auto var(--space-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: var(--space-sm);
+  color: var(--placeholder-color);
+  font-size: 14px;
+  background: var(--card-bg);
+}
+.qr-placeholder .qr-icon { font-size: 48px; }
+.support-hint {
+  font-size: 12px;
+  color: var(--secondary-color);
+  margin-bottom: var(--space-md);
+}
+.support-thanks {
+  font-size: 14px;
+  color: var(--secondary-color);
+}
+
+/* ========== Empty State ========== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-base);
+  flex: 1;
+}
+.empty-state .empty-icon {
+  font-size: 64px;
+  color: var(--placeholder-color);
+  margin-bottom: var(--space-base);
+}
+.empty-state h3 {
+  font-size: 18px; font-weight: 600;
+  color: var(--icon-color);
+  margin-bottom: var(--space-sm);
+}
+.empty-state p {
+  font-size: 14px;
+  color: var(--secondary-color);
+  text-align: center;
+}
+
+/* Color Swatch Section for token preview */
+.token-section {
+  padding: var(--space-base);
+}
+.token-section h3 {
+  font-size: 14px; font-weight: 600;
+  color: var(--title-color);
+  margin-bottom: var(--space-md);
+}
+.color-swatches {
+  display: flex; flex-wrap: wrap; gap: var(--space-sm);
+}
+.color-swatch {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 2px;
+  font-size: 9px; font-weight: 600; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Component demo section */
+.component-section {
+  padding: var(--space-base);
+}
+.component-section h4 {
+  font-size: 12px; font-weight: 600;
+  color: var(--secondary-color);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.component-row {
+  display: flex; gap: var(--space-md);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-base);
+}
+
+/* Responsive: ensure phone frame doesn't overflow */
+@media (max-width: 400px) {
+  .phone-frame { width: 100%; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Controls Bar -->
+<div class="controls" id="controls">
+  <span style="font-weight:700; font-size:14px; color:#fff; margin-right:8px;">隐私保险箱 UI</span>
+  <div class="separator"></div>
+  <button class="active" onclick="showPage('calculator')">计算器</button>
+  <button onclick="showPage('setup')">首次设置</button>
+  <button onclick="showPage('unlock')">解锁</button>
+  <button onclick="showPage('home')">主页</button>
+  <button onclick="showPage('folder')">文件夹</button>
+  <button onclick="showPage('preview')">图片预览</button>
+  <button onclick="showPage('video')">视频播放</button>
+  <button onclick="showPage('import')">导入</button>
+  <button onclick="showPage('trash')">回收站</button>
+  <button onclick="showPage('settings')">设置</button>
+  <button onclick="showPage('changepwd')">改密码</button>
+  <button onclick="showPage('support')">支持</button>
+  <div class="separator"></div>
+  <button class="theme-toggle" onclick="toggleTheme()">切换深色模式</button>
+</div>
+
+<!-- Phone Frame -->
+<div class="phone-frame" id="phoneFrame">
+  <!-- Status Bar (shared) -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div class="icons">
+      <span>&#9679;&#9679;&#9679;&#9679;</span>
+      <span>WiFi</span>
+      <span>100%</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 1: Calculator ==================== -->
+  <div class="page active" id="page-calculator">
+    <div class="calc-display">
+      <div class="calc-expression">1,200 + 34</div>
+      <div class="calc-result">1,234</div>
+    </div>
+    <div class="calc-keyboard">
+      <button class="calc-key func">C</button>
+      <button class="calc-key func">+/-</button>
+      <button class="calc-key func">%</button>
+      <button class="calc-key op">/</button>
+      <button class="calc-key">7</button>
+      <button class="calc-key">8</button>
+      <button class="calc-key">9</button>
+      <button class="calc-key op selected">x</button>
+      <button class="calc-key">4</button>
+      <button class="calc-key">5</button>
+      <button class="calc-key">6</button>
+      <button class="calc-key op">-</button>
+      <button class="calc-key">1</button>
+      <button class="calc-key">2</button>
+      <button class="calc-key">3</button>
+      <button class="calc-key op">+</button>
+      <button class="calc-key zero">0</button>
+      <button class="calc-key">.</button>
+      <button class="calc-key op">=</button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 2: First Setup ==================== -->
+  <div class="page" id="page-setup">
+    <div class="page-scroll">
+      <div class="setup-header">
+        <div class="app-logo">&#x2666;</div>
+        <div class="app-tagline">你的私密空间</div>
+        <div class="step-text">步骤 1 / 4</div>
+        <div class="step-indicator">
+          <div class="step-dot active"></div>
+          <div class="step-line"></div>
+          <div class="step-dot"></div>
+          <div class="step-line"></div>
+          <div class="step-dot"></div>
+          <div class="step-line"></div>
+          <div class="step-dot"></div>
+        </div>
+      </div>
+      <div class="pin-area">
+        <h3>设置你的 PIN 密码</h3>
+        <p class="pin-desc">请输入 4-6 位数字</p>
+        <div class="pin-dots">
+          <div class="pin-dot filled"></div>
+          <div class="pin-dot filled"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+        </div>
+        <div class="pin-keyboard">
+          <button class="pin-key">1</button>
+          <button class="pin-key">2</button>
+          <button class="pin-key">3</button>
+          <button class="pin-key">4</button>
+          <button class="pin-key">5</button>
+          <button class="pin-key">6</button>
+          <button class="pin-key">7</button>
+          <button class="pin-key">8</button>
+          <button class="pin-key">9</button>
+          <button class="pin-key empty"></button>
+          <button class="pin-key">0</button>
+          <button class="pin-key backspace">&#x232B;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3: Unlock ==================== -->
+  <div class="page" id="page-unlock">
+    <div class="page-scroll" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:48px;">
+      <div style="font-size:48px;color:var(--secondary-color);margin-bottom:var(--space-lg);">&#x1F512;</div>
+      <div style="font-size:16px;color:var(--icon-color);margin-bottom:var(--space-lg);">输入 PIN 解锁</div>
+      <div class="pin-dots" style="margin-bottom:var(--space-lg);">
+        <div class="pin-dot filled"></div>
+        <div class="pin-dot filled"></div>
+        <div class="pin-dot filled"></div>
+        <div class="pin-dot"></div>
+      </div>
+      <div class="pin-keyboard">
+        <button class="pin-key">1</button>
+        <button class="pin-key">2</button>
+        <button class="pin-key">3</button>
+        <button class="pin-key">4</button>
+        <button class="pin-key">5</button>
+        <button class="pin-key">6</button>
+        <button class="pin-key">7</button>
+        <button class="pin-key">8</button>
+        <button class="pin-key">9</button>
+        <button class="pin-key fingerprint">&#x1F91A;</button>
+        <button class="pin-key">0</button>
+        <button class="pin-key backspace">&#x232B;</button>
+      </div>
+      <div style="margin-top:var(--space-lg);">
+        <button class="btn-text">忘记密码？</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 4: Home ==================== -->
+  <div class="page" id="page-home">
+    <div class="navbar">
+      <span class="title" style="font-weight:600;">保险箱</span>
+      <div class="actions">
+        <div class="action-btn" title="搜索">&#x1F50D;</div>
+        <div class="action-btn" title="更多">&#x22EE;</div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item active">全部</div>
+      <div class="tab-item">图片</div>
+      <div class="tab-item">视频</div>
+    </div>
+    <div class="page-scroll" style="position:relative;">
+      <div class="folder-grid">
+        <!-- Card 1 -->
+        <div class="folder-card">
+          <div class="folder-cover" style="background:linear-gradient(135deg, #4a6fa5, #2d4a7a);">
+            <span style="font-size:20px;color:rgba(255,255,255,0.5);">&#x1F5BC;</span>
+          </div>
+          <div class="folder-info">
+            <div class="folder-name">&#x1F4C1; 私密相册</div>
+            <div class="folder-count">42 个文件</div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="folder-card">
+          <div class="folder-cover" style="background:linear-gradient(135deg, #5a7a5a, #3a5a3a);">
+            <span style="font-size:20px;color:rgba(255,255,255,0.5);">&#x1F4F7;</span>
+          </div>
+          <div class="folder-info">
+            <div class="folder-name">&#x1F4C1; 工作文件</div>
+            <div class="folder-count">8 个文件</div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="folder-card">
+          <div class="folder-cover" style="background:linear-gradient(135deg, #7a5a7a, #4a3a5a);">
+            <span style="font-size:20px;color:rgba(255,255,255,0.5);">&#x1F3A5;</span>
+          </div>
+          <div class="folder-info">
+            <div class="folder-name">&#x1F4C1; 生活</div>
+            <div class="folder-count">23 个文件</div>
+          </div>
+        </div>
+        <!-- Card 4 - empty -->
+        <div class="folder-card">
+          <div class="folder-cover" style="background:var(--card-bg);">
+            <span style="font-size:32px;color:var(--placeholder-color);">&#x1F4C2;</span>
+          </div>
+          <div class="folder-info">
+            <div class="folder-name">&#x1F4C1; 新建文件夹</div>
+            <div class="folder-count">0 个文件</div>
+          </div>
+        </div>
+      </div>
+      <div class="fab">+</div>
+    </div>
+    <div class="storage-bar">
+      <div class="storage-progress"><div class="storage-fill"></div></div>
+      <span class="storage-text">2.3 GB / 58.7 GB</span>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 5: Folder Detail ==================== -->
+  <div class="page" id="page-folder">
+    <div class="navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title">私密相册 (42)</span>
+      <div class="actions">
+        <div class="action-btn" title="排序">&#x21C5;</div>
+        <div class="action-btn" title="网格">&#x25A6;</div>
+      </div>
+    </div>
+    <div class="page-scroll" style="position:relative;">
+      <div class="thumb-grid">
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#e8d5b7,#c4a882);">&#x1F5BC;</div></div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#b7d5e8,#82a8c4);">&#x1F5BC;</div></div>
+        <div class="thumb-item">
+          <div class="thumb-placeholder" style="background:linear-gradient(135deg,#d5b7e8,#a882c4);">&#x1F3AC;</div>
+          <div class="duration-badge">03:24</div>
+        </div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#b7e8d5,#82c4a8);">&#x1F5BC;</div></div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#e8b7b7,#c48282);">&#x1F5BC;</div></div>
+        <div class="thumb-item">
+          <div class="thumb-placeholder" style="background:linear-gradient(135deg,#d5e8b7,#a8c482);">&#x1F3AC;</div>
+          <div class="duration-badge">01:15</div>
+        </div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#e8e0b7,#c4bc82);">&#x1F5BC;</div></div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#b7c8e8,#829ec4);">&#x1F5BC;</div></div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#c8b7e8,#9e82c4);">&#x1F5BC;</div></div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#e8c8b7,#c49e82);">&#x1F5BC;</div></div>
+        <div class="thumb-item"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#b7e8e8,#82c4c4);">&#x1F5BC;</div></div>
+        <div class="thumb-item">
+          <div class="thumb-placeholder" style="background:linear-gradient(135deg,#e8b7d5,#c482a8);">&#x1F3AC;</div>
+          <div class="duration-badge">05:02</div>
+        </div>
+      </div>
+      <div class="fab">+</div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 6: Image Preview ==================== -->
+  <div class="page preview-page" id="page-preview">
+    <div class="preview-navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title" style="flex:1;">IMG_20260315.jpg</span>
+      <div class="action-btn" style="color:#fff;">&#x22EE;</div>
+    </div>
+    <div class="preview-image-area">
+      <div class="placeholder-img">
+        <span class="big-icon">&#x1F5BC;</span>
+        <span>解密后的图片预览区域</span>
+        <span style="font-size:12px;">支持双指缩放 / 左右滑动切换</span>
+      </div>
+    </div>
+    <div class="preview-thumb-strip">
+      <div class="mini-thumb active" style="background:linear-gradient(135deg,#e8d5b7,#c4a882);"></div>
+      <div class="mini-thumb" style="background:linear-gradient(135deg,#b7d5e8,#82a8c4);"></div>
+      <div class="mini-thumb" style="background:linear-gradient(135deg,#d5b7e8,#a882c4);"></div>
+      <div class="mini-thumb" style="background:linear-gradient(135deg,#b7e8d5,#82c4a8);"></div>
+      <div class="mini-thumb" style="background:linear-gradient(135deg,#e8b7b7,#c48282);"></div>
+      <div class="mini-thumb" style="background:linear-gradient(135deg,#d5e8b7,#a8c482);"></div>
+      <div class="mini-thumb" style="background:linear-gradient(135deg,#e8e0b7,#c4bc82);"></div>
+    </div>
+    <div class="preview-actions">
+      <button class="preview-action-btn"><span class="pa-icon">&#x2197;</span><span>分享</span></button>
+      <button class="preview-action-btn"><span class="pa-icon">&#x2B07;</span><span>导出</span></button>
+      <button class="preview-action-btn"><span class="pa-icon">&#x1F5D1;</span><span>删除</span></button>
+      <button class="preview-action-btn"><span class="pa-icon">&#x2139;</span><span>详情</span></button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 7: Video Player ==================== -->
+  <div class="page video-page" id="page-video">
+    <div class="preview-navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title" style="flex:1;">VID_20260315.mp4</span>
+    </div>
+    <div class="video-area">
+      <div class="video-placeholder">
+        <span style="font-size:48px;">&#x1F3AC;</span>
+        <div class="play-btn-overlay">&#x25B6;</div>
+        <span style="font-size:12px;">视频播放区域</span>
+      </div>
+    </div>
+    <div class="video-controls">
+      <div class="video-progress">
+        <span class="time">01:23</span>
+        <div class="v-track">
+          <div class="v-played"></div>
+          <div class="v-dot"></div>
+        </div>
+        <span class="time">03:24</span>
+      </div>
+    </div>
+    <div class="video-bottom-actions">
+      <button class="preview-action-btn"><span class="pa-icon">&#x2197;</span><span>分享</span></button>
+      <button class="preview-action-btn"><span class="pa-icon">&#x2B07;</span><span>导出</span></button>
+      <button class="preview-action-btn"><span class="pa-icon">&#x1F5D1;</span><span>删除</span></button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 8: Import ==================== -->
+  <div class="page" id="page-import">
+    <div class="navbar">
+      <div class="back-btn">&#x2715;</div>
+      <span class="title">导入文件</span>
+    </div>
+    <div class="page-scroll">
+      <div style="padding:var(--space-lg) 0;">
+        <div class="import-source-card" style="margin-bottom:var(--space-md);">
+          <div class="source-icon">&#x1F5BC;</div>
+          <div class="source-info">
+            <div class="source-title">从相册导入</div>
+            <div class="source-desc">选择手机中的照片和视频</div>
+          </div>
+        </div>
+        <div class="import-source-card" style="margin-bottom:var(--space-md);">
+          <div class="source-icon">&#x1F4C4;</div>
+          <div class="source-info">
+            <div class="source-title">从文件管理器导入</div>
+            <div class="source-desc">选择任意类型的文件</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import confirmation preview -->
+      <div style="padding:0 var(--space-base);margin-top:var(--space-lg);">
+        <div style="font-size:12px;font-weight:500;color:var(--secondary-color);margin-bottom:var(--space-md);text-transform:uppercase;letter-spacing:1px;">导入确认预览</div>
+
+        <div style="display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-base);">
+          <span style="font-size:14px;font-weight:500;color:var(--title-color);">已选 12 个文件</span>
+          <span style="font-size:12px;color:var(--secondary-color);">(23.4 MB)</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:var(--space-base);">
+          <div style="aspect-ratio:1;border-radius:4px;background:linear-gradient(135deg,#e8d5b7,#c4a882);"></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:linear-gradient(135deg,#b7d5e8,#82a8c4);"></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:linear-gradient(135deg,#d5b7e8,#a882c4);"></div>
+          <div style="aspect-ratio:1;border-radius:4px;background:linear-gradient(135deg,#b7e8d5,#82c4a8);"></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-md) 0;border-top:1px solid var(--divider-color);border-bottom:1px solid var(--divider-color);margin-bottom:var(--space-base);">
+          <span style="font-size:14px;color:var(--body-color);">目标文件夹:</span>
+          <span style="font-size:14px;font-weight:500;color:var(--title-color);">私密相册</span>
+          <span style="color:var(--placeholder-color);">&#x25BE;</span>
+        </div>
+
+        <label style="display:flex;align-items:flex-start;gap:var(--space-sm);margin-bottom:var(--space-lg);cursor:pointer;">
+          <div style="width:20px;height:20px;border-radius:4px;border:2px solid var(--primary-500);background:var(--primary-500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0;margin-top:2px;">&#x2713;</div>
+          <div>
+            <div style="font-size:14px;color:var(--title-color);">导入后删除原文件</div>
+            <div style="font-size:12px;color:var(--secondary-color);">导入完成后自动从手机中删除原始文件</div>
+          </div>
+        </label>
+
+        <button class="btn-primary" style="width:100%;">开始导入 12 个文件</button>
+      </div>
+
+      <!-- Encryption progress demo -->
+      <div style="padding:var(--space-lg) var(--space-base);margin-top:var(--space-lg);">
+        <div style="font-size:12px;font-weight:500;color:var(--secondary-color);margin-bottom:var(--space-md);text-transform:uppercase;letter-spacing:1px;">加密进度弹窗预览</div>
+        <div style="background:var(--dialog-bg);border-radius:var(--radius-lg);padding:var(--space-lg);text-align:center;box-shadow:var(--card-shadow);">
+          <div class="circular-progress" style="margin:0 auto var(--space-base);">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="track" cx="40" cy="40" r="36"/>
+              <circle class="fill-ring" cx="40" cy="40" r="36"/>
+            </svg>
+            <div class="percent">78%</div>
+          </div>
+          <div style="font-size:14px;color:var(--title-color);margin-bottom:4px;">正在加密 15/20 ...</div>
+          <div style="font-size:12px;color:var(--secondary-color);margin-bottom:var(--space-base);">当前: IMG_0042.jpg</div>
+          <button class="btn-text">最小化</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 9: Recycle Bin ==================== -->
+  <div class="page" id="page-trash">
+    <div class="navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title">回收站</span>
+      <div class="actions">
+        <button class="btn-text" style="color:var(--error-main);font-size:14px;">清空</button>
+      </div>
+    </div>
+    <div class="page-scroll">
+      <div class="trash-item">
+        <div class="trash-thumb" style="background:linear-gradient(135deg,#e8d5b7,#c4a882);">&#x1F5BC;</div>
+        <div class="trash-info">
+          <div class="trash-name">IMG_0042.jpg</div>
+          <div class="trash-date">3月15日删除 &middot; 16天后清除</div>
+        </div>
+        <div class="trash-actions">
+          <button class="trash-action restore" title="恢复">&#x21BA;</button>
+          <button class="trash-action delete" title="删除">&#x1F5D1;</button>
+        </div>
+      </div>
+      <div class="trash-item">
+        <div class="trash-thumb" style="background:linear-gradient(135deg,#b7d5e8,#82a8c4);">&#x1F3AC;</div>
+        <div class="trash-info">
+          <div class="trash-name">VID_0098.mp4</div>
+          <div class="trash-date">3月14日删除 &middot; 15天后清除</div>
+        </div>
+        <div class="trash-actions">
+          <button class="trash-action restore" title="恢复">&#x21BA;</button>
+          <button class="trash-action delete" title="删除">&#x1F5D1;</button>
+        </div>
+      </div>
+      <div class="trash-item">
+        <div class="trash-thumb" style="background:linear-gradient(135deg,#d5b7e8,#a882c4);">&#x1F5BC;</div>
+        <div class="trash-info">
+          <div class="trash-name">IMG_0035.jpg</div>
+          <div class="trash-date">3月10日删除 &middot; 11天后清除</div>
+        </div>
+        <div class="trash-actions">
+          <button class="trash-action restore" title="恢复">&#x21BA;</button>
+          <button class="trash-action delete" title="删除">&#x1F5D1;</button>
+        </div>
+      </div>
+      <div class="trash-item">
+        <div class="trash-thumb" style="background:linear-gradient(135deg,#b7e8d5,#82c4a8);">&#x1F5BC;</div>
+        <div class="trash-info">
+          <div class="trash-name">IMG_0028.jpg</div>
+          <div class="trash-date">3月8日删除 &middot; 9天后清除</div>
+        </div>
+        <div class="trash-actions">
+          <button class="trash-action restore" title="恢复">&#x21BA;</button>
+          <button class="trash-action delete" title="删除">&#x1F5D1;</button>
+        </div>
+      </div>
+
+      <!-- Dialog demo inside trash -->
+      <div style="padding:var(--space-lg) var(--space-base);">
+        <div style="font-size:12px;font-weight:500;color:var(--secondary-color);margin-bottom:var(--space-md);text-transform:uppercase;letter-spacing:1px;">警告对话框预览</div>
+        <div class="dialog" style="margin:0 auto;box-shadow:var(--card-shadow);">
+          <div style="text-align:center;margin-bottom:var(--space-base);">
+            <span style="font-size:48px;color:var(--error-main);">&#x26A0;</span>
+          </div>
+          <h3 style="color:var(--error-main);text-align:center;">确定清空回收站？</h3>
+          <p style="text-align:center;">此操作不可恢复，所有文件将被彻底删除。</p>
+          <div class="dialog-actions" style="justify-content:center;">
+            <button class="btn-secondary" style="height:40px;font-size:14px;">取消</button>
+            <button class="btn-danger" style="height:40px;font-size:14px;">清空</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 10: Settings ==================== -->
+  <div class="page" id="page-settings">
+    <div class="navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title">设置</span>
+    </div>
+    <div class="page-scroll">
+      <div class="group-title">安全设置</div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x1F512;</div>
+        <div class="setting-content">
+          <div class="setting-title">修改密码</div>
+        </div>
+        <span class="chevron">&#x203A;</span>
+      </div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x1F91A;</div>
+        <div class="setting-content">
+          <div class="setting-title">生物识别解锁</div>
+          <div class="setting-desc">使用指纹快速解锁</div>
+        </div>
+        <div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x23F1;</div>
+        <div class="setting-content">
+          <div class="setting-title">自动锁定</div>
+        </div>
+        <span class="setting-value">立即锁定</span>
+        <span class="chevron">&#x203A;</span>
+      </div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x1F4F5;</div>
+        <div class="setting-content">
+          <div class="setting-title">防截屏</div>
+        </div>
+        <div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+      </div>
+
+      <div class="group-title">导入设置</div>
+      <div class="setting-item" style="margin-left:0;">
+        <div class="setting-icon">&#x1F5D1;</div>
+        <div class="setting-content">
+          <div class="setting-title">导入后删除原文件</div>
+          <div class="setting-desc">导入完成后自动删除手机中的原始文件</div>
+        </div>
+        <div class="switch" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+      </div>
+
+      <div class="group-title">高级功能</div>
+      <div class="setting-item" style="margin-left:0;">
+        <div class="setting-icon">&#x1F5A9;</div>
+        <div class="setting-content">
+          <div class="setting-title">计算器伪装入口</div>
+        </div>
+        <div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x1F319;</div>
+        <div class="setting-content">
+          <div class="setting-title">主题</div>
+        </div>
+        <span class="setting-value">跟随系统</span>
+        <span class="chevron">&#x203A;</span>
+      </div>
+
+      <div class="group-title">存储</div>
+      <div class="setting-item" style="margin-left:0;">
+        <div class="setting-icon">&#x1F4BE;</div>
+        <div class="setting-content">
+          <div class="setting-title">存储空间</div>
+          <div style="margin-top:4px;">
+            <div class="progress-bar" style="margin-bottom:4px;"><div class="fill" style="width:30%;"></div></div>
+            <div class="setting-desc">2.3 GB / 64 GB</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-title">关于</div>
+      <div class="setting-item" style="margin-left:0;">
+        <div class="setting-icon">&#x2139;</div>
+        <div class="setting-content">
+          <div class="setting-title">版本信息</div>
+        </div>
+        <span class="setting-value">v1.0.0</span>
+      </div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x1F4DC;</div>
+        <div class="setting-content">
+          <div class="setting-title">隐私政策</div>
+        </div>
+        <span class="chevron">&#x203A;</span>
+      </div>
+      <div class="setting-item">
+        <div class="setting-icon">&#x2764;</div>
+        <div class="setting-content">
+          <div class="setting-title">支持开发者</div>
+        </div>
+        <span class="chevron">&#x203A;</span>
+      </div>
+
+      <div style="height:var(--space-xl);"></div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 11: Change Password ==================== -->
+  <div class="page" id="page-changepwd">
+    <div class="navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title">修改密码</span>
+    </div>
+    <div class="page-scroll" style="display:flex;flex-direction:column;align-items:center;padding-top:var(--space-lg);">
+      <div class="step-text" style="font-size:12px;color:var(--secondary-color);margin-bottom:var(--space-sm);">步骤 1 / 3</div>
+      <div class="step-indicator" style="margin-bottom:var(--space-xl);">
+        <div class="step-dot active"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+        <div class="step-line"></div>
+        <div class="step-dot"></div>
+      </div>
+      <div class="pin-area">
+        <h3>验证当前密码</h3>
+        <p class="pin-desc">请输入你的当前 PIN</p>
+        <div class="pin-dots">
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+        </div>
+        <div class="pin-keyboard">
+          <button class="pin-key">1</button>
+          <button class="pin-key">2</button>
+          <button class="pin-key">3</button>
+          <button class="pin-key">4</button>
+          <button class="pin-key">5</button>
+          <button class="pin-key">6</button>
+          <button class="pin-key">7</button>
+          <button class="pin-key">8</button>
+          <button class="pin-key">9</button>
+          <button class="pin-key empty"></button>
+          <button class="pin-key">0</button>
+          <button class="pin-key backspace">&#x232B;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 12: Support Developer ==================== -->
+  <div class="page" id="page-support">
+    <div class="navbar">
+      <div class="back-btn">&#x2190;</div>
+      <span class="title">支持开发者</span>
+    </div>
+    <div class="page-scroll">
+      <div class="support-page">
+        <div class="support-icon">&#x2764;</div>
+        <div class="support-title">感谢你使用隐私保险箱</div>
+        <div class="support-desc">
+          隐私保险箱是完全免费的项目。<br>
+          如果觉得好用，可以请开发者<br>
+          喝杯咖啡，你的支持是我持续<br>
+          更新的最大动力。
+        </div>
+        <div class="qr-placeholder">
+          <div class="qr-icon">&#x25A3;</div>
+          <span>微信赞赏码</span>
+        </div>
+        <div class="support-hint">长按图片保存，打开微信扫码</div>
+        <div class="support-thanks">金额随意，感谢你的支持！</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /phone-frame -->
+
+<!-- Component & Token Reference below phone -->
+<div style="width:375px;margin-top:32px;padding:0 0 48px;">
+  <h2 style="font-size:18px;font-weight:600;color:#374151;margin-bottom:16px;">Design Token 参考</h2>
+
+  <!-- Color Tokens -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Primary Colors</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <div class="color-swatch" style="background:#E8EDF5;color:#374151;">50</div>
+      <div class="color-swatch" style="background:#C5D1E8;color:#374151;">100</div>
+      <div class="color-swatch" style="background:#9FB3D8;">200</div>
+      <div class="color-swatch" style="background:#7A96C8;">300</div>
+      <div class="color-swatch" style="background:#5A7DB8;">400</div>
+      <div class="color-swatch" style="background:#3D64A8;">500</div>
+      <div class="color-swatch" style="background:#2F5091;">600</div>
+      <div class="color-swatch" style="background:#233D7A;">700</div>
+      <div class="color-swatch" style="background:#1A2E5C;">800</div>
+      <div class="color-swatch" style="background:#111D3D;">900</div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Neutral Colors</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <div class="color-swatch" style="background:#FFFFFF;border:1px solid #D8DCE4;color:#374151;">0</div>
+      <div class="color-swatch" style="background:#F7F8FA;color:#374151;">50</div>
+      <div class="color-swatch" style="background:#EEF0F4;color:#374151;">100</div>
+      <div class="color-swatch" style="background:#D8DCE4;color:#374151;">200</div>
+      <div class="color-swatch" style="background:#B8BEC8;color:#374151;">300</div>
+      <div class="color-swatch" style="background:#8E96A4;">400</div>
+      <div class="color-swatch" style="background:#6B7280;">500</div>
+      <div class="color-swatch" style="background:#4B5563;">600</div>
+      <div class="color-swatch" style="background:#374151;">700</div>
+      <div class="color-swatch" style="background:#1F2937;">800</div>
+      <div class="color-swatch" style="background:#111827;">900</div>
+      <div class="color-swatch" style="background:#0A0E17;">950</div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Semantic Colors</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <div class="color-swatch" style="background:#DCFCE7;color:#374151;">S-L</div>
+      <div class="color-swatch" style="background:#16A34A;">S-M</div>
+      <div class="color-swatch" style="background:#15803D;">S-D</div>
+      <div class="color-swatch" style="background:#FEF3C7;color:#374151;">W-L</div>
+      <div class="color-swatch" style="background:#D97706;">W-M</div>
+      <div class="color-swatch" style="background:#B45309;">W-D</div>
+      <div class="color-swatch" style="background:#FEE2E2;color:#374151;">E-L</div>
+      <div class="color-swatch" style="background:#DC2626;">E-M</div>
+      <div class="color-swatch" style="background:#B91C1C;">E-D</div>
+      <div class="color-swatch" style="background:#DBEAFE;color:#374151;">I-L</div>
+      <div class="color-swatch" style="background:#2563EB;">I-M</div>
+      <div class="color-swatch" style="background:#1D4ED8;">I-D</div>
+    </div>
+  </div>
+
+  <!-- Button States -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Button States</h3>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Primary Button</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-primary" style="font-size:14px;height:40px;min-width:80px;">默认</button>
+        <button class="btn-primary" style="font-size:14px;height:40px;min-width:80px;background:#2F5091;">按下</button>
+        <button class="btn-primary disabled" style="font-size:14px;height:40px;min-width:80px;">禁用</button>
+        <button class="btn-primary loading" style="font-size:14px;height:40px;min-width:80px;">加载中</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Secondary Button</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-secondary" style="font-size:14px;height:40px;">默认</button>
+        <button class="btn-secondary" style="font-size:14px;height:40px;background:#E8EDF5;border-color:#2F5091;color:#2F5091;">按下</button>
+        <button class="btn-secondary disabled" style="font-size:14px;height:40px;">禁用</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Danger Button</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-danger" style="font-size:14px;height:40px;">默认</button>
+        <button class="btn-danger" style="font-size:14px;height:40px;background:#B91C1C;">按下</button>
+        <button class="btn-danger" style="font-size:14px;height:40px;background:#D8DCE4;color:#8E96A4;cursor:not-allowed;">禁用</button>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Text Button</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-text">默认</button>
+        <button class="btn-text" style="background:rgba(61,100,168,0.08);border-radius:8px;">按下</button>
+        <button class="btn-text disabled">禁用</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Typography Scale</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font-family:'Roboto Mono',monospace;font-size:48px;font-weight:700;color:#374151;line-height:1.2;">Display 48</div>
+      <div style="font-size:28px;font-weight:700;color:#374151;line-height:1.3;">H1 28px Bold</div>
+      <div style="font-size:22px;font-weight:600;color:#374151;line-height:1.3;">H2 22px SemiBold</div>
+      <div style="font-size:18px;font-weight:600;color:#374151;line-height:1.4;">H3 18px SemiBold</div>
+      <div style="font-size:16px;font-weight:400;color:#4B5563;line-height:1.6;">Body.lg 16px Regular</div>
+      <div style="font-size:14px;font-weight:400;color:#4B5563;line-height:1.5;">Body.md 14px Regular</div>
+      <div style="font-size:12px;font-weight:400;color:#6B7280;line-height:1.5;">Body.sm 12px Regular</div>
+      <div style="font-size:10px;font-weight:400;color:#8E96A4;line-height:1.4;">Caption 10px Regular</div>
+    </div>
+  </div>
+
+  <!-- Spacing -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Spacing Scale</h3>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:2px;height:16px;background:#3D64A8;border-radius:1px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">xxs 2</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:4px;height:16px;background:#3D64A8;border-radius:1px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">xs 4</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:8px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">sm 8</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:12px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">md 12</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:16px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:48px;">base 16</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:24px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">lg 24</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:32px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">xl 32</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:48px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">2xl 48</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:64px;height:16px;background:#3D64A8;border-radius:2px;"></div>
+        <span style="font-size:11px;color:#6B7280;width:40px;">3xl 64</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Radius -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Border Radius</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="width:48px;height:48px;border:2px solid #3D64A8;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6B7280;">xs 4</div>
+      <div style="width:48px;height:48px;border:2px solid #3D64A8;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6B7280;">sm 8</div>
+      <div style="width:48px;height:48px;border:2px solid #3D64A8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6B7280;">md 12</div>
+      <div style="width:48px;height:48px;border:2px solid #3D64A8;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6B7280;">lg 16</div>
+      <div style="width:48px;height:48px;border:2px solid #3D64A8;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6B7280;">xl 24</div>
+      <div style="width:48px;height:48px;border:2px solid #3D64A8;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6B7280;">full</div>
+    </div>
+  </div>
+
+  <!-- Shadows -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Shadows (Light Mode)</h3>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <div style="width:72px;height:72px;border-radius:8px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;color:#6B7280;">sm</div>
+      <div style="width:72px;height:72px;border-radius:8px;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;color:#6B7280;">md</div>
+      <div style="width:72px;height:72px;border-radius:8px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.16);display:flex;align-items:center;justify-content:center;font-size:11px;color:#6B7280;">lg</div>
+    </div>
+  </div>
+
+  <!-- Switch & Input Components -->
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h3 style="font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;">Components</h3>
+
+    <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Switch</div>
+    <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+      <div class="switch" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+      <span style="font-size:12px;color:#6B7280;">OFF</span>
+      <div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+      <span style="font-size:12px;color:#6B7280;">ON</span>
+    </div>
+
+    <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Text Input</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <input class="text-input" placeholder="默认状态 - 请输入文件夹名称" />
+      <input class="text-input" style="border:2px solid var(--primary-500);background:var(--neutral-0);" value="聚焦状态" />
+      <input class="text-input" style="border:2px solid var(--error-main);background:rgba(220,38,38,0.05);" value="错误状态" />
+      <input class="text-input" style="border-color:var(--neutral-100);background:var(--neutral-100);color:var(--neutral-400);" value="禁用状态" disabled />
+    </div>
+
+    <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Progress Bar</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <div class="progress-bar"><div class="fill" style="width:30%;"></div></div>
+      <div class="progress-bar"><div class="fill" style="width:65%;"></div></div>
+      <div class="progress-bar"><div class="fill" style="width:85%;background:var(--warning-main);"></div></div>
+      <div class="progress-bar"><div class="fill" style="width:97%;background:var(--error-main);"></div></div>
+    </div>
+
+    <div style="font-size:11px;color:#8E96A4;margin-bottom:6px;">Toast / Snackbar</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="padding:12px 16px;border-radius:8px;background:#1F2937;color:#fff;font-size:14px;">已成功导入 20 个文件</div>
+      <div style="padding:12px 16px;border-radius:8px;background:#1F2937;color:#fff;font-size:14px;display:flex;justify-content:space-between;align-items:center;">
+        <span>已删除 3 个文件</span>
+        <span style="color:#7A96C8;font-weight:500;cursor:pointer;">撤销</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPage(pageId) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target
+  const target = document.getElementById('page-' + pageId);
+  if (target) target.classList.add('active');
+
+  // Update nav buttons
+  document.querySelectorAll('.controls button:not(.theme-toggle)').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+}
+
+function toggleTheme() {
+  const frame = document.getElementById('phoneFrame');
+  const isDark = frame.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    frame.removeAttribute('data-theme');
+    document.querySelector('.theme-toggle').textContent = '切换深色模式';
+  } else {
+    frame.setAttribute('data-theme', 'dark');
+    document.querySelector('.theme-toggle').textContent = '切换浅色模式';
+  }
+}
+
+// Make switches interactive
+document.querySelectorAll('.switch').forEach(sw => {
+  sw.addEventListener('click', function() {
+    // toggle handled by onclick
+  });
+});
+
+// Tab bar interaction
+document.querySelectorAll('.tab-item').forEach(tab => {
+  tab.addEventListener('click', function() {
+    this.parentElement.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
